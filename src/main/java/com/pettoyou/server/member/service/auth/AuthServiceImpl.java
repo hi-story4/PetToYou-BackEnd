@@ -91,16 +91,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private Member forceJoin(OAuthInfoResponse joinParam) {
-        Member joinMember = Member.from(joinParam);
+        Member joinMember = memberRepository.save(Member.from(joinParam));
 
         Role role = roleRepository.findByRoleType(RoleType.ROLE_MEMBER)
                 .orElseThrow(() -> new CustomException(CustomResponseStatus.ROLE_NOT_FOUND));
 
-        MemberRole memberRole = MemberRole.of(joinMember, role);
+        memberRoleRepository.save(MemberRole.of(joinMember, role));
 
-        memberRoleRepository.save(memberRole);
-
-        return memberRepository.save(joinMember);
+        return joinMember;
     }
 
     private Optional<Member> findMemberByOauthProviderAndProviderId(OAuthProvider provider, String providerId) {

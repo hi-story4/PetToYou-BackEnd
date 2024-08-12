@@ -1,4 +1,4 @@
-package com.pettoyou.server.config;
+package com.pettoyou.server.config.web;
 
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;

@@ -1,4 +1,4 @@
-package com.pettoyou.server.config;
+package com.pettoyou.server.config.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

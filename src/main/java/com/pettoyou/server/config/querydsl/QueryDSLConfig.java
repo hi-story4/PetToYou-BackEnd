@@ -1,4 +1,4 @@
-package com.pettoyou.server.config;
+package com.pettoyou.server.config.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

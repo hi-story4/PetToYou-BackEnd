@@ -1,4 +1,4 @@
-package com.pettoyou.server.config;
+package com.pettoyou.server.config.security;
 
 import com.pettoyou.server.config.jwt.filter.JwtAuthenticationFilter;
 import com.pettoyou.server.config.jwt.handler.JwtAccessDeniedHandler;

@@ -2,6 +2,7 @@ package com.pettoyou.server.domains.hospital.dto.response;
 
 import com.pettoyou.server.domains.hospital.entity.HospitalTag;
 import com.pettoyou.server.domains.hospital.dto.HospitalTagDto;
+import com.pettoyou.server.domains.store.entity.enums.SubscriptionStatus;
 import lombok.Builder;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public record HospitalDtoWithDistance(
         Long reviewCount,
         Double ratingAvg,
         String distance,
+        SubscriptionStatus subscriptionStatus,
         HospitalTagDto tags
 ) {
     public static HospitalDtoWithDistance of(
@@ -25,7 +27,8 @@ public record HospitalDtoWithDistance(
             Double ratingAvg,
             Times time,
             List<HospitalTag> hospitalTags,
-            double distance
+            double distance,
+            SubscriptionStatus subscriptionStatus
     ) {
         return HospitalDtoWithDistance.builder()
                 .storeId(storeId)
@@ -35,6 +38,7 @@ public record HospitalDtoWithDistance(
                 .reviewCount(reviewCount == null ? 5L : reviewCount)
                 .ratingAvg(ratingAvg == null ? 4.5 : ratingAvg)
                 .distance(distanceFormatting(distance))
+                .subscriptionStatus(subscriptionStatus)
                 .tags(HospitalTagDto.toDto(hospitalTags))
                 .build();
     }

@@ -8,8 +8,12 @@ import com.pettoyou.server.domains.hospital.entity.HospitalTag;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryCond;
 import com.pettoyou.server.domains.hospital.dto.request.HosptialSearchQueryInfo;
 import com.pettoyou.server.domains.hospital.dto.response.Times;
+import com.pettoyou.server.domains.hospital.entity.QHospital;
+import com.pettoyou.server.domains.hospital.entity.QHospitalTag;
+import com.pettoyou.server.domains.hospital.entity.QTagMapper;
 import com.pettoyou.server.domains.store.entity.Address;
 import com.pettoyou.server.domains.store.entity.BusinessHour;
+import com.pettoyou.server.domains.store.entity.QBusinessHour;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -29,11 +33,11 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.pettoyou.server.hospital.entity.QHospital.hospital;
-import static com.pettoyou.server.hospital.entity.QHospitalTag.hospitalTag;
-import static com.pettoyou.server.hospital.entity.QTagMapper.tagMapper;
-import static com.pettoyou.server.review.entity.QReview.*;
-import static com.pettoyou.server.store.entity.QBusinessHour.businessHour;
+import static com.pettoyou.server.domains.hospital.entity.QHospital.*;
+import static com.pettoyou.server.domains.hospital.entity.QHospitalTag.hospitalTag;
+import static com.pettoyou.server.domains.hospital.entity.QTagMapper.*;
+import static com.pettoyou.server.domains.review.entity.QReview.review;
+import static com.pettoyou.server.domains.store.entity.QBusinessHour.*;
 
 @Repository
 @RequiredArgsConstructor

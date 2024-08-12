@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.pettoyou.server.member.entity.QMember.*;
-import static com.pettoyou.server.scrap.entity.QScrap.*;
-import static com.pettoyou.server.store.entity.QStore.*;
+import static com.pettoyou.server.domains.member.entity.QMember.*;
+import static com.pettoyou.server.domains.scrap.entity.QScrap.*;
+import static com.pettoyou.server.domains.store.entity.QStore.*;
 
 @Repository
 @Slf4j

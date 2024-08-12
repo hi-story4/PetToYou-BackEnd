@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.pettoyou.server.healthNote.entity.QHealthNote.*;
-import static com.pettoyou.server.store.entity.QStore.store;
+import static com.pettoyou.server.domains.healthNote.entity.QHealthNote.*;
+import static com.pettoyou.server.domains.store.entity.QStore.*;
 
 @Repository
 @RequiredArgsConstructor

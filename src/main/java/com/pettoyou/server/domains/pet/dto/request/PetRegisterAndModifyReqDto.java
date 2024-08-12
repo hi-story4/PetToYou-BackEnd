@@ -3,7 +3,6 @@ package com.pettoyou.server.domains.pet.dto.request;
 import com.pettoyou.server.domains.pet.entity.enums.Gender;
 import com.pettoyou.server.domains.pet.entity.enums.PetType;
 import com.pettoyou.server.domains.pet.entity.enums.Species;
-import com.pettoyou.server.pet.entity.enums.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

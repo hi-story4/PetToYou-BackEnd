@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.pettoyou.server.member.entity.QMember.*;
-import static com.pettoyou.server.pet.entity.QPet.*;
+import static com.pettoyou.server.domains.member.entity.QMember.*;
+import static com.pettoyou.server.domains.pet.entity.QPet.pet;
 
 @Repository
 @RequiredArgsConstructor

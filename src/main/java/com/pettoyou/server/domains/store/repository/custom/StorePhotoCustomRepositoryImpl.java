@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.pettoyou.server.store.entity.QStorePhoto.storePhoto1;
-
+import static com.pettoyou.server.domains.store.entity.QStorePhoto.*;
 
 @Repository
 @RequiredArgsConstructor

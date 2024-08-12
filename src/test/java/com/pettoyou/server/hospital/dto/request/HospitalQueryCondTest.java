@@ -1,5 +1,6 @@
 package com.pettoyou.server.hospital.dto.request;
 
+import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryCond;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

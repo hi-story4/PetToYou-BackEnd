@@ -2,7 +2,7 @@ package com.pettoyou.server.util;
 
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
-import com.pettoyou.server.photo.entity.PhotoData;
+import com.pettoyou.server.domains.photo.entity.PhotoData;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Resource;
 import io.awspring.cloud.s3.S3Template;

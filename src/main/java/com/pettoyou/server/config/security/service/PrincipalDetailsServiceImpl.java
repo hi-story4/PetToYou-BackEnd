@@ -2,8 +2,8 @@ package com.pettoyou.server.config.security.service;
 
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
-import com.pettoyou.server.member.entity.Member;
-import com.pettoyou.server.member.repository.MemberRepository;
+import com.pettoyou.server.domains.member.entity.Member;
+import com.pettoyou.server.domains.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

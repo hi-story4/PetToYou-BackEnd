@@ -1,9 +1,10 @@
 package com.pettoyou.server.banner.service.query;
 
-import com.pettoyou.server.banner.dto.response.BannerQueryRespDto;
-import com.pettoyou.server.banner.entity.Banner;
-import com.pettoyou.server.banner.repository.BannerRepository;
-import com.pettoyou.server.photo.entity.PhotoData;
+import com.pettoyou.server.domains.banner.dto.response.BannerQueryRespDto;
+import com.pettoyou.server.domains.banner.entity.Banner;
+import com.pettoyou.server.domains.banner.repository.BannerRepository;
+import com.pettoyou.server.domains.banner.service.query.BannerQueryServiceImpl;
+import com.pettoyou.server.domains.photo.entity.PhotoData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

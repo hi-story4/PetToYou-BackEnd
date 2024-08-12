@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Hospital", description = "Hospital 관련 API 입니다.")
-@RequestMapping("/api/v1/admin/hospital")
+@RequestMapping("/api/v1/hospital/admin")
 @Slf4j
 public class HospitalControllerAdmin {
 

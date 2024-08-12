@@ -151,7 +151,8 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
         List<Tuple> hospitals = jpaQueryFactory
                 .select(
                         hospital.storeId, hospital.storeName,
-                        hospital.thumbnail.photoUrl.as("thumbnailUrl"), hospital.address,
+                        hospital.thumbnail.photoUrl,
+                        hospital.address,
                         businessHour, hospital.subscriptionStatus)
                 .from(hospital)
                 .leftJoin(hospital.businessHours, businessHour)

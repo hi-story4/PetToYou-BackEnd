@@ -8,12 +8,9 @@ import com.pettoyou.server.domains.hospital.entity.HospitalTag;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryCond;
 import com.pettoyou.server.domains.hospital.dto.request.HosptialSearchQueryInfo;
 import com.pettoyou.server.domains.hospital.dto.response.Times;
-import com.pettoyou.server.domains.hospital.entity.QHospital;
-import com.pettoyou.server.domains.hospital.entity.QHospitalTag;
-import com.pettoyou.server.domains.hospital.entity.QTagMapper;
 import com.pettoyou.server.domains.store.entity.Address;
 import com.pettoyou.server.domains.store.entity.BusinessHour;
-import com.pettoyou.server.domains.store.entity.QBusinessHour;
+import com.pettoyou.server.domains.store.entity.enums.SubscriptionStatus;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -66,7 +63,9 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
                         Expressions.stringTemplate(
                                 "ST_Distance_Sphere(ST_PointFromText({0}, 4326), {1})",
                                 point, hospital.address.point
-                        ).as("distance"))
+                        ).as("distance"),
+                        hospital.subscriptionStatus
+                )
                 .from(hospital)
                 .leftJoin(hospital.businessHours, businessHour)
                 .on(businessHour.dayOfWeek.eq(dayOfWeek))
@@ -114,7 +113,6 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
                         openHospitalSubQuery(queryCond.openCond(), Time.valueOf(now), dayOfWeek)
                 );
 
-
         if (countQuery == null) throw new CustomException(CustomResponseStatus.STORE_NOT_FOUND);
 
         List<HospitalDtoWithDistance> result = hospitals.stream()
@@ -127,6 +125,7 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
                     Double distance = Optional.ofNullable(t.get(distanceAlias)).orElse(Double.MAX_VALUE);
                     BusinessHour storeBusinessHour = t.get(businessHour);
                     Times times = storeBusinessHour != null ? Times.of(storeBusinessHour) : null;
+                    SubscriptionStatus subscriptionStatus = t.get(hospital.subscriptionStatus);
 
                     return HospitalDtoWithDistance.of(
                             storeId,
@@ -136,7 +135,8 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
                             ratingAverage,
                             times,
                             hospitalTagMap.getOrDefault(storeId, new ArrayList<>()),
-                            distance
+                            distance,
+                            subscriptionStatus
                     );
                 })
                 .toList();
@@ -151,8 +151,9 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
         List<Tuple> hospitals = jpaQueryFactory
                 .select(
                         hospital.storeId, hospital.storeName,
-                        hospital.thumbnail.photoUrl.as("thumbnailUrl"), hospital.address,
-                        businessHour)
+                        hospital.thumbnail.photoUrl,
+                        hospital.address,
+                        businessHour, hospital.subscriptionStatus)
                 .from(hospital)
                 .leftJoin(hospital.businessHours, businessHour)
                 .on(businessHour.dayOfWeek.eq(dayOfWeek))
@@ -197,6 +198,7 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
                     String thumbnailUrl = t.get(hospital.thumbnail.photoUrl);
                     Address address = t.get(hospital.address);
                     BusinessHour storeBusinessHour = t.get(businessHour);
+                    SubscriptionStatus subscriptionStatus = t.get(hospital.subscriptionStatus);
 
                     return HospitalDtoWithAddress.of(
                             storeId,
@@ -204,7 +206,8 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
                             thumbnailUrl,
                             address,
                             storeBusinessHour,
-                            hospitalTagMap.getOrDefault(storeId, new ArrayList<>())
+                            hospitalTagMap.getOrDefault(storeId, new ArrayList<>()),
+                            subscriptionStatus
                     );
                 })
                 .toList();

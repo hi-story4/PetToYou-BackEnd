@@ -5,6 +5,7 @@ import com.pettoyou.server.domains.hospital.entity.Hospital;
 import com.pettoyou.server.domains.hospital.entity.HospitalTag;
 import com.pettoyou.server.domains.store.dto.RegistrationInfoDto;
 import com.pettoyou.server.domains.store.entity.Address;
+import com.pettoyou.server.domains.store.entity.enums.SubscriptionStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
@@ -26,7 +27,8 @@ public record HospitalDetail(
         Address address,
         List<Times> businessHours,
         RegistrationInfoDto.Response registrationInfo,
-        HospitalTagDto hospitalTags
+        HospitalTagDto hospitalTags,
+        SubscriptionStatus subscriptionStatus
 ) {
     public static HospitalDetail from(Hospital hospital, List<HospitalTag> tagList) {
         List<Times> businessHours = Optional.ofNullable(hospital.getBusinessHours())
@@ -48,6 +50,7 @@ public record HospitalDetail(
                 .businessHours(businessHours)
                 .registrationInfo(hospital.getRegistrationInfo() == null ? null :RegistrationInfoDto.Response.toDto(hospital.getRegistrationInfo()))
                 .hospitalTags(HospitalTagDto.toDto(tagList))
+                .subscriptionStatus(hospital.getSubscriptionStatus())
                 .build();
     }
 

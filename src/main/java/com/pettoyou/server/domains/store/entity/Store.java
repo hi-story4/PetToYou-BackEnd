@@ -4,6 +4,7 @@ import com.pettoyou.server.constant.entity.BaseEntity;
 import com.pettoyou.server.constant.enums.BaseStatus;
 import com.pettoyou.server.domains.photo.entity.PhotoData;
 import com.pettoyou.server.domains.review.entity.Review;
+import com.pettoyou.server.domains.store.entity.enums.SubscriptionStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,7 +28,8 @@ import java.util.List;
 })
 public abstract class Store extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id")
     private Long storeId;
 
@@ -51,6 +53,10 @@ public abstract class Store extends BaseEntity {
 
     private String websiteLink;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private SubscriptionStatus subscriptionStatus;
+
     @Column(columnDefinition = "TEXT")
     private String storeInfo;
 
@@ -64,7 +70,6 @@ public abstract class Store extends BaseEntity {
     @Embedded
     @NotNull
     private Address address;
-
 
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<BusinessHour> businessHours = new ArrayList<>();
@@ -99,6 +104,7 @@ public abstract class Store extends BaseEntity {
         this.reviews = reviews;
         this.storePhotos = storePhotos;
         //기본값 적용.
+        this.subscriptionStatus = SubscriptionStatus.UNSUBSCRIBED;
         this.storeStatus = BaseStatus.ACTIVATE;
     }
 }

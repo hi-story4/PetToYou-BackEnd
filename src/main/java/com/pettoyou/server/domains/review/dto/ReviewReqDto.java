@@ -1,10 +1,10 @@
-package com.pettoyou.server.review.dto;
+package com.pettoyou.server.domains.review.dto;
 
 
-import com.pettoyou.server.pet.entity.Pet;
-import com.pettoyou.server.review.entity.Review;
-import com.pettoyou.server.store.entity.Store;
-import com.pettoyou.server.store.entity.enums.StoreType;
+import com.pettoyou.server.domains.pet.entity.Pet;
+import com.pettoyou.server.domains.review.entity.Review;
+import com.pettoyou.server.domains.store.entity.Store;
+import com.pettoyou.server.domains.store.entity.enums.StoreType;
 
 public record ReviewReqDto(String treatmentType,
                            String treatment,
@@ -13,7 +13,7 @@ public record ReviewReqDto(String treatmentType,
                            String content
 )
 {
-    public static Review toEntity(Store store, Pet pet, Long userId, ReviewReqDto reviewReqDto, StoreType storeType)
+    public static Review toEntity(Store store, Pet pet, Long userId, ReviewReqDto reviewReqDto, String storeType)
     {
         return Review.builder()
                 .memberId(userId)
@@ -26,7 +26,7 @@ public record ReviewReqDto(String treatmentType,
                 .treatment(reviewReqDto.treatment)
                 .price(reviewReqDto.price)
                 .build();
-//null 값 어카지 ?
+//null 값 처리
     }
 
     public static Review toEntity(ReviewReqDto reviewReqDto){
@@ -40,10 +40,3 @@ public record ReviewReqDto(String treatmentType,
     }
 
 }
-//{
-//	진료항목 종류 treatment_type
-//	진료항목 treatment
-//	치료비 price
-//	평점 rate
-//	내용 content
-//}

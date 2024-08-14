@@ -4,9 +4,9 @@ import com.pettoyou.server.config.security.service.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
-import com.pettoyou.server.review.dto.ReviewReqDto;
-import com.pettoyou.server.review.dto.ReviewRespDto;
-import com.pettoyou.server.review.service.ReviewService;
+import com.pettoyou.server.domains.review.service.ReviewService;
+import com.pettoyou.server.domains.review.dto.ReviewReqDto;
+import com.pettoyou.server.domains.review.dto.ReviewRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +48,8 @@ public class ReviewController {
                 .path(path + "/{reviewId}")
                 .buildAndExpand(reviewId)  // reviewId 변수를 정확히 전달
                 .toUri();
-        return ResponseEntity.created(location).body(ApiResponse.createSuccess("등록 완료", CustomResponseStatus.SUCCESS));
+
+        return ApiResponse.createSuccessWithCreated("리뷰 등록 완료!" , location);
     }
 
     @GetMapping("/member/store/{storeId}/review")
@@ -58,7 +57,7 @@ public class ReviewController {
                                                                       @PageableDefault(size = 10, sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable)
     {
         Page<ReviewRespDto> reviewRespDto = reviewService.getReview(storeId, pageable);
-        return ResponseEntity.ok().body(ApiResponse.createSuccess(reviewRespDto, CustomResponseStatus.SUCCESS));
+        return ApiResponse.createSuccessWithOk(reviewRespDto);
     }
 
 
@@ -68,7 +67,8 @@ public class ReviewController {
                                                             @AuthenticationPrincipal PrincipalDetails principalDetails)
     {
         reviewService.deleteReview(reivewId);
-        return ResponseEntity.ok().body(ApiResponse.createSuccess("삭제완료!", CustomResponseStatus.SUCCESS));
+        return ApiResponse.createSuccessWithOk("리뷰 삭제 완료!");
+
     }
 
     //수정기능
@@ -81,7 +81,8 @@ public class ReviewController {
                                                          @AuthenticationPrincipal PrincipalDetails principalDetails)
     {
         reviewService.putReview(reivewId, reviewImgs, reviewReqDto);
-        return ResponseEntity.ok().body(ApiResponse.createSuccess("수정완료!", CustomResponseStatus.SUCCESS));
+        return ApiResponse.createSuccessWithOk("리뷰 수정 완료");
+
     }
 
     //상단고정 기능
@@ -93,8 +94,8 @@ public class ReviewController {
     {
         long result = reviewService.patchReviewPinned(reivewId, pinned);
         if(result<1) {throw new CustomException(CustomResponseStatus.INTERNAL_SERVER_ERROR);}
+        return ApiResponse.createSuccessWithOk("상단고정 수정 완료");
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccess("댓글 고정 수정완료", CustomResponseStatus.SUCCESS));
     }
     //리뷰 신고기능은 컨트롤러 따로 만들면 좋겠는데 ?
 

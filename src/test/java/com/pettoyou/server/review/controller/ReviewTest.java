@@ -3,20 +3,19 @@ package com.pettoyou.server.review.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pettoyou.server.config.security.service.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
-import com.pettoyou.server.hospital.entity.Hospital;
-import com.pettoyou.server.member.entity.Member;
-import com.pettoyou.server.pet.entity.Pet;
-import com.pettoyou.server.review.dto.ReviewRespDto;
-import com.pettoyou.server.review.entity.Review;
-import com.pettoyou.server.review.repository.custom.ReviewCustomRepository;
-import com.pettoyou.server.review.service.ReviewService;
+import com.pettoyou.server.domains.pet.entity.enums.Species;
+import com.pettoyou.server.domains.review.service.ReviewService;
+import com.pettoyou.server.domains.hospital.entity.Hospital;
+import com.pettoyou.server.domains.member.entity.Member;
+import com.pettoyou.server.domains.pet.entity.Pet;
+import com.pettoyou.server.domains.review.dto.ReviewRespDto;
+import com.pettoyou.server.domains.review.entity.Review;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +23,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,7 +31,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -106,7 +103,7 @@ public class ReviewTest {
         Pet pet = Pet.builder()
                 .petId(1L)
                 .petName("petName")
-                .species("species")
+                .species(Species.ABYSSINIAN)
                 .birth(birth)
                 .build();
 

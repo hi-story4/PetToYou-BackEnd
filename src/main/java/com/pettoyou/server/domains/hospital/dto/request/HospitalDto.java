@@ -49,7 +49,7 @@ public record HospitalDto(
                 .thumbnail(thumbnail)
                 .storePhotos(new ArrayList<>())
                 .businessHours(new ArrayList<>())
-                .registrationInfo(RegistrationInfoDto.Request.toEntity(hospitalDto.registrationInfo(), StoreType.HOSPITAL))
+                .registrationInfo(RegistrationInfoDto.Request.toEntity(hospitalDto.registrationInfo()))
                 .build();
 
         hospital.getBusinessHours()
@@ -79,7 +79,7 @@ public record HospitalDto(
                 .thumbnail(thumbnail)
                 .storePhotos(new ArrayList<>())
                 .businessHours(new ArrayList<>())
-                .registrationInfo(RegistrationInfoDto.Request.toEntity(hospitalDto.registrationInfo(), StoreType.HOSPITAL))
+                .registrationInfo(RegistrationInfoDto.Request.toEntity(hospitalDto.registrationInfo()))
                 .build();
 
         hospital.getBusinessHours()

@@ -1,23 +1,18 @@
-package com.pettoyou.server.review.dto;
+package com.pettoyou.server.domains.review.dto;
 
-import com.pettoyou.server.review.entity.Review;
 import com.querydsl.core.Tuple;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.Builder;
-import lombok.Getter;
-import org.springframework.data.domain.Page;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
-import static com.pettoyou.server.pet.entity.QPet.pet;
-import static com.pettoyou.server.review.entity.QReview.review;
+import static com.pettoyou.server.domains.review.entity.QReview.review;
 
 /**
- * DTO for {@link com.pettoyou.server.review.entity.Review}
+ * DTO for {@link com.pettoyou.server.domains.review.entity.Review}
  */
 
 @Builder

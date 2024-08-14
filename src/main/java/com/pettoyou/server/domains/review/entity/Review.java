@@ -1,10 +1,9 @@
-package com.pettoyou.server.review.entity;
+package com.pettoyou.server.domains.review.entity;
 
 import com.pettoyou.server.constant.entity.BaseEntity;
 import com.pettoyou.server.constant.enums.BaseStatus;
-import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.pet.entity.Pet;
-import com.pettoyou.server.domains.store.entity.enums.StoreType;
+import com.pettoyou.server.domains.review.dto.ReviewReqDto;
 import com.pettoyou.server.domains.store.entity.Store;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -29,8 +28,8 @@ public class Review extends BaseEntity {
     @Column(name = "review_id")
     private Long reviewId;
 
-    @Enumerated(EnumType.STRING)
-    private StoreType storeType;
+    @NotNull
+    private String storeType;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -38,13 +37,18 @@ public class Review extends BaseEntity {
 
     @Builder.Default
     @NotNull
-    private Double rating = 0.0;
+    private Integer rating = 0;
+
+
     private String treatmentType;
     private String treatment;
     private Integer price;
+
+    @NotNull
     private String content;
 
     @Builder.Default
+    @NotNull
     private Integer pinned=0;
 
     //Index
@@ -54,9 +58,6 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "store_id")
     private Store store;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id")
@@ -78,13 +79,3 @@ public class Review extends BaseEntity {
         this.content=reviewDto.content();
     }
 }
-//ReviewId PK long
-//StoreId long FK >- Hospital.HospitalId
-//MemberId long FK >- Member.MemberId
-//PetId long FK >- Pet.PetId
-//StoreType string
-//Rating float
-//Content text
-//CreatedAt datetime
-//ReviewStatus string # ACTIVATE, DEACTIVATE,
-//

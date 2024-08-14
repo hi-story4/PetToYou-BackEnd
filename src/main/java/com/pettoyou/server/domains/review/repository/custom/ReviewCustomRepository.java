@@ -1,6 +1,5 @@
-package com.pettoyou.server.review.repository.custom;
+package com.pettoyou.server.domains.review.repository.custom;
 
-import com.pettoyou.server.review.dto.ReviewReqDto;
 import com.querydsl.core.Tuple;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

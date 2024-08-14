@@ -1,9 +1,8 @@
 package com.pettoyou.server.util;
 
+import com.pettoyou.server.domains.review.service.ReviewService;
 import com.pettoyou.server.hospital.entity.Hospital;
-import com.pettoyou.server.review.dto.ReviewRespDto;
 import com.pettoyou.server.review.entity.Review;
-import com.pettoyou.server.review.service.ReviewService;
 import com.pettoyou.server.store.entity.enums.StoreType;
 import com.querydsl.core.types.OrderSpecifier;
 import jakarta.persistence.EntityManager;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,7 +26,7 @@ class QueryDslUtilTest {
     QueryDslUtil queryDslUtil;
 
     @MockBean
-    private ReviewService reviewService;
+    private ReviewService.ReviewService reviewService;
 
     @Autowired
     EntityManager em;

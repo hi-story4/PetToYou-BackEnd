@@ -1,4 +1,4 @@
-package com.pettoyou.server.review.controller;
+package com.pettoyou.server.domains.review.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

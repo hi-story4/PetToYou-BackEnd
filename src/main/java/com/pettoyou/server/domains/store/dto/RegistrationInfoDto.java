@@ -27,13 +27,12 @@ public class RegistrationInfoDto{
         @NotNull
         String businessNumber;
 
-        public static RegistrationInfo toEntity (RegistrationInfoDto.Request reg, StoreType stoereType){
+        public static RegistrationInfo toEntity (RegistrationInfoDto.Request reg){
             return RegistrationInfo.builder()
                     .ceoName(reg.ceoName)
                     .ceoPhone(reg.ceoPhone)
                     .ceoEmail(reg.ceoEmail)
                     .businessNumber(reg.businessNumber)
-                    .storeType(stoereType)
                     .build();
         }
     }
@@ -60,7 +59,6 @@ public class RegistrationInfoDto{
                     .ceoPhone(reg.getCeoPhone())
                     .ceoEmail(reg.getCeoEmail())
                     .businessNumber(reg.getBusinessNumber())
-                    .storeType(reg.getStoreType())
                     .build();
         }
     }

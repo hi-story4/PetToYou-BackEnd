@@ -1,6 +1,5 @@
 package com.pettoyou.server.domains.review.repository.custom;
 
-import com.pettoyou.server.domains.review.entity.QReview;
 import com.pettoyou.server.domains.review.entity.Review;
 import com.pettoyou.server.util.QueryDslUtil;
 import com.querydsl.core.QueryResults;
@@ -55,7 +54,6 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
 
     public long updatePinned(Long reviewId, Integer pinned)
     {
-
         long result = jpaQueryFactory.update(review)
                 .set(review.pinned, pinned)
                 .where(review.reviewId.eq(reviewId))

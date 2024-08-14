@@ -1,4 +1,4 @@
-package com.pettoyou.server.hospital.service;
+package com.pettoyou.server.domains.hospital.service;
 
 import com.pettoyou.server.constant.enums.BaseStatus;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;

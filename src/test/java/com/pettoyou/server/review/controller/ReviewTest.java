@@ -3,13 +3,18 @@ package com.pettoyou.server.review.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pettoyou.server.config.security.service.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
+import com.pettoyou.server.domains.hospital.entity.QHospital;
 import com.pettoyou.server.domains.pet.entity.enums.Species;
+import com.pettoyou.server.domains.photo.entity.PhotoData;
 import com.pettoyou.server.domains.review.service.ReviewService;
 import com.pettoyou.server.domains.hospital.entity.Hospital;
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.pet.entity.Pet;
 import com.pettoyou.server.domains.review.dto.ReviewRespDto;
 import com.pettoyou.server.domains.review.entity.Review;
+import com.pettoyou.server.domains.store.entity.Address;
+import com.pettoyou.server.domains.store.entity.BusinessHour;
+import com.pettoyou.server.domains.store.entity.RegistrationInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,8 +36,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,7 +88,7 @@ public class ReviewTest {
                 .content("Great experience!")
                 .memberId(1L)
                 .petName("Bobby")
-                .species("Dog")
+                .species(Species.ABYSSINIAN)
                 .birth(birth)
                 .build();
 
@@ -92,10 +99,20 @@ public class ReviewTest {
 
 
 
-        Hospital hospital = Hospital.builder()
-                .storeId(1L)
-                .storeName("test")
+        Hospital hospital1 = Hospital.builder()
+                .storeId(3L)
+                .storeName("hospital2")
+                .thumbnail(new PhotoData("bucket", "object", "photoUrl"))
+                .storePhone("010-1234-1234")
+                .notice("notice")
+                .websiteLink("website")
+                .additionalServiceTag("additionalServicetags")
+                .storeInfo("storeInfo")
+                .storeInfoPhoto(new PhotoData("bucket", "object", "photoUrl"))
+                .address(new Address("zipCode", "addressDetail", "sido", "sigungu", "eupmyun", "doro", null))
+                .businessHours(Arrays.asList(new BusinessHour(1L, 1, Time.valueOf("09:00:00"), Time.valueOf("18:00:00"), null, null, true, null)))
                 .build();
+
         Member member = Member.builder()
                 .memberId(1L)
                 .build();
@@ -113,7 +130,7 @@ public class ReviewTest {
                 .treatment("treatment")
                 .price(10000)
                 .memberId(1L)
-                .store(hospital)
+                .store(hospital1)
                 .pet(pet)
                 .build();
         principalDetails = mock(PrincipalDetails.class);
@@ -152,21 +169,6 @@ public class ReviewTest {
         System.out.println(returnedReview);
     }
 
-
-//    @Test
-//    @WithMockUser(username = "user", roles = {"ADMIN"})
-//    void deleteReview_AsOwner_Success() throws Exception {
-//        Principal principal = mock(Principal.class);
-//        when(principal.getName()).thenReturn("user");
-//
-//        doNothing().when(reviewService).deleteReview(anyLong());
-//        mockMvc.perform(delete("/api/v1/review/{reviewId}", 1L)
-//                        .param("memberId", "1L")
-//                        .principal()
-//    ???
-//                )
-//                .andExpect(status().isOk());
-//    }
 
     @Test
     void Get_service_테스트 () {

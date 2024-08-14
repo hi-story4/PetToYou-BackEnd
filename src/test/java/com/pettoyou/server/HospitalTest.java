@@ -1,8 +1,8 @@
 package com.pettoyou.server;
 
-import com.pettoyou.server.hospital.entity.Hospital;
-import com.pettoyou.server.hospital.repository.HospitalRepository;
-import com.pettoyou.server.store.entity.enums.StoreType;
+import com.pettoyou.server.domains.hospital.entity.Hospital;
+import com.pettoyou.server.domains.hospital.repository.HospitalRepository;
+import com.pettoyou.server.domains.store.entity.enums.StoreType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
@@ -38,7 +38,7 @@ class HospitalTest {
 
         List<Hospital> hospitalList = hospitalRepository.findAll();
 
-        assertThat(hospitalList.get(1).getStoreType()).isEqualTo(StoreType.HOSPITAL);
+        assertThat(hospitalList.get(1).getDtype()).isEqualTo('H');
         //자동으로 storeType이 저장되는지 확인
 
     }

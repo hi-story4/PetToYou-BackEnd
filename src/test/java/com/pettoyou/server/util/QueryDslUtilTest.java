@@ -1,9 +1,8 @@
 package com.pettoyou.server.util;
 
 import com.pettoyou.server.domains.review.service.ReviewService;
-import com.pettoyou.server.hospital.entity.Hospital;
-import com.pettoyou.server.review.entity.Review;
-import com.pettoyou.server.store.entity.enums.StoreType;
+import com.pettoyou.server.domains.hospital.entity.Hospital;
+import com.pettoyou.server.domains.review.entity.Review;
 import com.querydsl.core.types.OrderSpecifier;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -26,7 +25,7 @@ class QueryDslUtilTest {
     QueryDslUtil queryDslUtil;
 
     @MockBean
-    private ReviewService.ReviewService reviewService;
+    private ReviewService reviewService;
 
     @Autowired
     EntityManager em;

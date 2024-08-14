@@ -1,5 +1,6 @@
 package com.pettoyou.server.domains.review.dto;
 
+import com.pettoyou.server.domains.pet.entity.enums.Species;
 import com.querydsl.core.Tuple;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static com.pettoyou.server.domains.pet.entity.QPet.pet;
 import static com.pettoyou.server.domains.review.entity.QReview.review;
 
 /**
@@ -18,7 +20,7 @@ import static com.pettoyou.server.domains.review.entity.QReview.review;
 @Builder
 public record ReviewRespDto(@PastOrPresent LocalDateTime createdAt, @PastOrPresent LocalDateTime modifiedAt, Long reviewId,
                             @NotNull Integer rating, String treatment, Integer price, String content,
-                            @NotNull Long memberId, String petName, String species,
+                            @NotNull Long memberId, String petName, Species species,
                             LocalDate birth) implements Serializable {
     public static ReviewRespDto toDto(Tuple tuple) {
     ReviewRespDtoBuilder reviewRespDto =  ReviewRespDto.builder()

@@ -1,10 +1,10 @@
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.pettoyou.server.hospital.controller.HospitalControllerAdmin;
-//import com.pettoyou.server.hospital.dto.request.HospitalDto;
-//import com.pettoyou.server.hospital.service.HospitalService;
-//import com.pettoyou.server.store.dto.BusinessHourDto;
-//import com.pettoyou.server.store.dto.RegistrationInfoDto;
-//import com.pettoyou.server.store.dto.request.AddressDto;
+//import com.pettoyou.server.domains.hospital.controller.HospitalControllerAdmin;
+//import com.pettoyou.server.domains.hospital.dto.request.HospitalDto;
+//import com.pettoyou.server.domains.hospital.service.HospitalService;
+//import com.pettoyou.server.domains.store.dto.BusinessHourDto;
+//import com.pettoyou.server.domains.store.dto.RegistrationInfoDto;
+//import com.pettoyou.server.domains.store.dto.request.AddressDto;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

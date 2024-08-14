@@ -1,7 +1,7 @@
 package com.pettoyou.server.config.security.service;
 
-import com.pettoyou.server.member.entity.Member;
-import com.pettoyou.server.member.entity.MemberRole;
+import com.pettoyou.server.domains.member.entity.Member;
+import com.pettoyou.server.domains.member.entity.MemberRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;

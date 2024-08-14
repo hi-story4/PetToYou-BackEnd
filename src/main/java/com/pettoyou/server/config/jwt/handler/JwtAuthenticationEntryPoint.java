@@ -42,7 +42,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
          */
         if (Objects.equals(exception, CustomResponseStatus.BAD_JWT.getMessage())) {
             response.sendRedirect("/exception/entrypoint/badToken");
+        }
 
+        /***
+         * 로그아웃한 사용자가 접근을 하려고 하는 경우
+         */
+        if (Objects.equals(exception, CustomResponseStatus.LOGOUT_MEMBER.getMessage())) {
+            response.sendRedirect("/exception/entrypoint/logout");
         }
     }
 }

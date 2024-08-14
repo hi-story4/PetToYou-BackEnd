@@ -21,6 +21,9 @@ import java.util.Date;
 @Getter
 @Slf4j
 public class JwtUtil {
+    private static final String EMAIL = "email";
+    private static final String BEARER = "Bearer ";
+
     private final String SECRET_KEY;
     private final long ACCESS_TOKEN_EXPIRATION_TIME;
     private final long REFRESH_TOKEN_EXPIRATION_TIME;
@@ -48,14 +51,6 @@ public class JwtUtil {
 
     /***
      * @param token : 요청이 들어온 토큰
-     * @return : token을 파싱. 즉, 디코딩 하여 리턴
-     */
-    public Claims parseToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSigningKey(SECRET_KEY)).build().parseClaimsJws(token).getBody();
-    }
-
-    /***
-     * @param token : 요청이 들어온 토큰
      * @return : 토큰을 파싱하여 토큰에 들어있는 Claim을 리턴
      */
     private Claims extractAllClaims(String token) {
@@ -71,7 +66,7 @@ public class JwtUtil {
      * @return : 토큰속(claim)에 있는 클라이언트의 email을 리턴
      */
     public String getEmailInToken(String token) {
-        return extractAllClaims(token).get("email", String.class);
+        return extractAllClaims(token).get(EMAIL, String.class);
     }
 
     /***
@@ -91,7 +86,7 @@ public class JwtUtil {
      */
     public String createToken(String email, TokenType tokenType) {
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put("email", email);
+        claims.put(EMAIL, email);
 
         long exprTime = tokenType == TokenType.ACCESS_TOKEN ? ACCESS_TOKEN_EXPIRATION_TIME : REFRESH_TOKEN_EXPIRATION_TIME;
 
@@ -108,11 +103,8 @@ public class JwtUtil {
      * @return : 토큰 문자열 앞의 Bearer 을 제거하고 토큰 문자열만 리턴
      */
     public String resolveToken(String token) {
-        if (token != null) {
-            return token.substring("Bearer ".length());
-        } else {
-            return "";
-        }
+        if (token == null) return "";
+        return token.substring(BEARER.length());
     }
 
     /***
@@ -120,8 +112,13 @@ public class JwtUtil {
      * @return : 토큰의 유효기간이 얼마나 남았는지 리턴
      */
     public Long getExpiration(String token) {
-        Date expiration = Jwts.parserBuilder().setSigningKey(getSigningKey(SECRET_KEY)).build()
-                .parseClaimsJws(token).getBody().getExpiration();
+        Date expiration = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey(SECRET_KEY))
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+
         long now = System.currentTimeMillis();
         return expiration.getTime() - now;
     }

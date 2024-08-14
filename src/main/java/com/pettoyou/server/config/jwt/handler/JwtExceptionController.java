@@ -2,7 +2,6 @@ package com.pettoyou.server.config.jwt.handler;
 
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,5 +27,10 @@ public class JwtExceptionController {
     @GetMapping("/entrypoint/badToken")
     public void badTokenException() {
         throw new CustomException(CustomResponseStatus.BAD_JWT);
+    }
+
+    @GetMapping("/entrypoint/logout")
+    public void logoutMemberAccessException() {
+        throw new CustomException(CustomResponseStatus.LOGOUT_MEMBER);
     }
 }

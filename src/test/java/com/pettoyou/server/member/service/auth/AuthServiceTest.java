@@ -76,7 +76,7 @@ class AuthServiceTest {
         when(memberRepository.findByProviderAndProviderId(any(OAuthProvider.class), anyString()))
                 .thenReturn(Optional.ofNullable(member));
         when(redisUtil.getData(anyString())).thenReturn("baseRT");
-        when(authTokenGenerator.generate(anyString(), anyString())).thenReturn(authTokens);
+        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(kakaoInfoResponse);
 
         // when
@@ -101,8 +101,8 @@ class AuthServiceTest {
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(kakaoInfoResponse);
         when(redisUtil.getData(anyString())).thenReturn(null);
         when(jwtUtil.getExpiration(any(TokenType.class))).thenReturn(authTokens.exprTime());
-        when(jwtUtil.createToken(anyString(), any(TokenType.class))).thenReturn(authTokens.refreshToken());
-        when(authTokenGenerator.generate(anyString(), anyString())).thenReturn(authTokens);
+        when(jwtUtil.createToken(anyString(), anyList(), any(TokenType.class))).thenReturn(authTokens.refreshToken());
+        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
 
         // when
         AuthTokens resultToken = authService.signIn(kakaoLoginParam);
@@ -126,7 +126,7 @@ class AuthServiceTest {
         when(memberRepository.findByProviderAndProviderId(any(OAuthProvider.class), anyString()))
                 .thenReturn(Optional.ofNullable(member));
         when(redisUtil.getData(anyString())).thenReturn("baseRT");
-        when(authTokenGenerator.generate(anyString(), anyString())).thenReturn(authTokens);
+        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(naverInfoResponse);
 
         // when
@@ -149,11 +149,11 @@ class AuthServiceTest {
         when(memberRepository.findByProviderAndProviderId(any(OAuthProvider.class), anyString()))
                 .thenReturn(Optional.ofNullable(member));
         when(redisUtil.getData(anyString())).thenReturn(null);
-        when(authTokenGenerator.generate(anyString(), anyString())).thenReturn(authTokens);
+        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(naverInfoResponse);
         when(jwtUtil.getExpiration(any(TokenType.class))).thenReturn(authTokens.exprTime());
-        when(jwtUtil.createToken(anyString(), any(TokenType.class))).thenReturn(authTokens.refreshToken());
-        when(authTokenGenerator.generate(anyString(), anyString())).thenReturn(authTokens);
+        when(jwtUtil.createToken(anyString(), anyList(), any(TokenType.class))).thenReturn(authTokens.refreshToken());
+        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
 
         // when
         AuthTokens resultToken = authService.signIn(naverLoginParam);
@@ -182,7 +182,7 @@ class AuthServiceTest {
         when(memberRoleRepository.save(any(MemberRole.class))).thenReturn(null);
 
         when(redisUtil.getData(anyString())).thenReturn("baseRt");
-        when(authTokenGenerator.generate(anyString(), anyString())).thenReturn(authTokens);
+        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(kakaoInfoResponse);
 
         // when
@@ -210,7 +210,7 @@ class AuthServiceTest {
         when(memberRoleRepository.save(any(MemberRole.class))).thenReturn(null);
 
         when(redisUtil.getData(anyString())).thenReturn("baseRt");
-        when(authTokenGenerator.generate(anyString(), anyString())).thenReturn(authTokens);
+        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(naverInfoResponse);
 
         // when
@@ -231,12 +231,14 @@ class AuthServiceTest {
         // given
         String validRefreshToken = "validRefreshToken";
         String emailInToken = "test@gmail.com";
+        Member member = createMember();
         AuthTokens generateToken = createAuthTokens();
 
         when(jwtUtil.resolveToken(anyString())).thenReturn(validRefreshToken);
         when(jwtUtil.getEmailInToken(anyString())).thenReturn(emailInToken);
         when(redisUtil.getData(anyString())).thenReturn(validRefreshToken);
-        when(authTokenGenerator.generate(anyString())).thenReturn(generateToken);
+        when(authTokenGenerator.generate(anyString(), anyList())).thenReturn(generateToken);
+        when(memberRepository.findByEmail(anyString())).thenReturn(Optional.ofNullable(member));
 
         // when
         AuthTokens resultToken = authService.reissue(validRefreshToken);

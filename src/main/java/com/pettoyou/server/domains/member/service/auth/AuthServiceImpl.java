@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -51,13 +52,15 @@ public class AuthServiceImpl implements AuthService {
                 oAuthInfoResponse.getId()
         ).orElseGet(() -> forceJoin(oAuthInfoResponse));
 
+        List<RoleType> memberRoles = findMember.getAllMemberRole();
+
         String refreshToken = redisUtil.getData(RT + findMember.getEmail());
         if (refreshToken == null) {
-            refreshToken = jwtUtil.createToken(findMember.getEmail(), TokenType.REFRESH_TOKEN);
+            refreshToken = jwtUtil.createToken(findMember.getEmail(), memberRoles, TokenType.REFRESH_TOKEN);
             redisUtil.setData(RT + findMember.getEmail(), refreshToken, jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
         }
 
-        return authTokenGenerator.generate(findMember.getEmail(), refreshToken);
+        return authTokenGenerator.generate(findMember.getEmail(), memberRoles, refreshToken);
     }
 
     @Override
@@ -73,7 +76,12 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(CustomResponseStatus.REFRESH_TOKEN_NOT_MATCH);
         }
 
-        AuthTokens generateToken = authTokenGenerator.generate(emailInToken);
+        Member findMember = memberRepository.findByEmail(emailInToken).orElseThrow(
+                () -> new CustomException(CustomResponseStatus.MEMBER_NOT_FOUND)
+        );
+        List<RoleType> memberRoles = findMember.getAllMemberRole();
+
+        AuthTokens generateToken = authTokenGenerator.generate(emailInToken, memberRoles);
         redisUtil.setData(RT + emailInToken, generateToken.refreshToken(), jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
 
         return generateToken;

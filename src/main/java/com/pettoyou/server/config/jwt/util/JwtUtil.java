@@ -1,5 +1,6 @@
 package com.pettoyou.server.config.jwt.util;
 
+import com.pettoyou.server.domains.member.entity.enums.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,12 +17,14 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Getter
 @Slf4j
 public class JwtUtil {
     private static final String EMAIL = "email";
+    private static final String ROLE = "role";
     private static final String BEARER = "Bearer ";
 
     private final String SECRET_KEY;
@@ -63,6 +66,20 @@ public class JwtUtil {
 
     /***
      * @param token : 요청이 들어온 토큰
+     * @return : 토큰속(claim)에 있는 클라이언트의 role을 리턴
+     */
+    public List<RoleType> getRolesInToken(String token) {
+        // 토큰에서 ROLE 클레임을 List<String>으로 가져옴
+        List<String> rolesAsString = extractAllClaims(token).get(ROLE, List.class);
+
+        // List<String>을 List<RoleType>으로 변환
+        return rolesAsString.stream()
+                .map(RoleType::valueOf)  // 문자열을 RoleType 열거형으로 변환
+                .toList();
+    }
+
+    /***
+     * @param token : 요청이 들어온 토큰
      * @return : 토큰속(claim)에 있는 클라이언트의 email을 리턴
      */
     public String getEmailInToken(String token) {
@@ -81,21 +98,36 @@ public class JwtUtil {
     /***
      *
      * @param email : claim 에 넣기 위한 클라이언트의 이메일
+     * @param roles : claim에 넣기 위한 클라이언트의 권한들
      * @param tokenType : 액세스 토큰과 리프레시 토큰을 구분짓기 위한 토큰타입
      * @return : 토큰 타입에 맞는 토큰을 생성하여 리턴
      */
-    public String createToken(String email, TokenType tokenType) {
-        Claims claims = Jwts.claims().setSubject(email);
-        claims.put(EMAIL, email);
+    public String createToken(String email, List<RoleType> roles, TokenType tokenType) {
+        Claims claims = createClaims(email, roles);
 
-        long exprTime = tokenType == TokenType.ACCESS_TOKEN ? ACCESS_TOKEN_EXPIRATION_TIME : REFRESH_TOKEN_EXPIRATION_TIME;
+        long expirationTime = getExpirationTime(tokenType);
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + exprTime))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSigningKey(SECRET_KEY), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    private Claims createClaims(String email, List<RoleType> roles) {
+        Claims claims = Jwts.claims().setSubject(email);
+        claims.put(EMAIL, email);
+        if (roles != null && !roles.isEmpty()) {
+            claims.put(ROLE, roles.stream().map(Enum::name).toList());
+        }
+        return claims;
+    }
+
+    private long getExpirationTime(TokenType tokenType) {
+        return tokenType == TokenType.ACCESS_TOKEN
+                ? ACCESS_TOKEN_EXPIRATION_TIME
+                : REFRESH_TOKEN_EXPIRATION_TIME;
     }
 
     /***

@@ -2,6 +2,7 @@ package com.pettoyou.server.domains.pet.controller;
 
 import com.pettoyou.server.config.security.service.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
+import com.pettoyou.server.domains.pet.dto.request.PetModifyReqDto;
 import com.pettoyou.server.domains.pet.dto.request.PetRegisterAndModifyReqDto;
 import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.dto.response.PetDetailInfoRespDto;
@@ -38,7 +39,7 @@ public class PetController {
 
     @PostMapping("/petv2")
     public ResponseEntity<ApiResponse<PetRegisterRespDto>> petRegisterV2(
-            @RequestPart(value = "petRegisterDto") @Valid PetRegisterReqDto petRegisterDto,
+            @RequestBody @Valid PetRegisterReqDto petRegisterDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
         PetRegisterRespDto response = petCommandService.petRegisterV2(petRegisterDto, principalDetails.getUserId());
@@ -53,6 +54,16 @@ public class PetController {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
         petCommandService.petModify(id, petProfileImg, petRegisterDto, principalDetails.getUserId());
+        return ApiResponse.createSuccessWithOk("반려동물 정보 수정 완료");
+    }
+
+    @PutMapping("/petv2/{id}")
+    public ResponseEntity<ApiResponse<String>> petModifyV2(
+            @PathVariable Long id,
+            @RequestBody @Valid PetModifyReqDto petRegisterDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        petCommandService.petModifyV2(id, petRegisterDto, principalDetails.getUserId());
         return ApiResponse.createSuccessWithOk("반려동물 정보 수정 완료");
     }
 

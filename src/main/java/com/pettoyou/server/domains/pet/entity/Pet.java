@@ -5,6 +5,7 @@ import com.pettoyou.server.constant.enums.BaseStatus;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.member.entity.Member;
+import com.pettoyou.server.domains.pet.dto.request.PetModifyReqDto;
 import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.entity.enums.Species;
 import com.pettoyou.server.domains.pet.dto.request.PetRegisterAndModifyReqDto;
@@ -117,6 +118,18 @@ public class Pet extends BaseEntity {
     }
 
     public void modify(PetRegisterAndModifyReqDto modifyDto, PhotoData newPhoto) {
+        this.petName = modifyDto.petName();
+        this.species = modifyDto.species();
+        this.birth = modifyDto.birth();
+        this.petType = modifyDto.petType();
+        this.adoptionDate = modifyDto.adoptionDate();
+        this.caution = modifyDto.caution();
+        this.petMedicalInfo = PetMedicalInfo.from(modifyDto.petMedicalInfoDto());
+        this.profilePhotoData = newPhoto;
+    }
+
+
+    public void modifyV2(PetModifyReqDto modifyDto, PhotoData newPhoto) {
         this.petName = modifyDto.petName();
         this.species = modifyDto.species();
         this.birth = modifyDto.birth();

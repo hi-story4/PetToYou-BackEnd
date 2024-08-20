@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public record PetRegisterReqDto(
+public record PetModifyReqDto(
         @NotNull(message = "반려동물의 타입(강아지 or 고양이)을 선택해주세요.")
         PetType petType,
         @NotBlank(message = "반려동물의 이름을 입력해주세요.")
@@ -25,7 +25,7 @@ public record PetRegisterReqDto(
         PetMedicalInfoDto petMedicalInfoDto,
         PetProfilePhotoDto petProfilePhotoDto
 ) {
-    public PetRegisterReqDto {
+    public PetModifyReqDto {
         // 입양일을 입력하지 않은 경우엔 입양일은 생일과 동일해진다.
         if (Objects.isNull(adoptionDate)) adoptionDate = birth;
     }

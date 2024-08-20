@@ -5,6 +5,7 @@ import com.pettoyou.server.constant.enums.BaseStatus;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.member.entity.Member;
+import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.entity.enums.Species;
 import com.pettoyou.server.domains.pet.dto.request.PetRegisterAndModifyReqDto;
 import com.pettoyou.server.domains.pet.entity.enums.Gender;
@@ -84,6 +85,22 @@ public class Pet extends BaseEntity {
     private List<Review> reviews = new ArrayList<>();
 
     public static Pet of(PetRegisterAndModifyReqDto registerDto, PhotoData profilePhotoData, Member member) {
+        return builder()
+                .petName(registerDto.petName())
+                .species(registerDto.species())
+                .birth(registerDto.birth())
+                .petType(registerDto.petType())
+                .gender(registerDto.gender())
+                .adoptionDate(registerDto.adoptionDate() == null ? null : registerDto.adoptionDate())
+                .petMedicalInfo(PetMedicalInfo.from(registerDto.petMedicalInfoDto()))
+                .member(member)
+                .petStatus(BaseStatus.ACTIVATE)
+                .caution(registerDto.caution())
+                .profilePhotoData(profilePhotoData)
+                .build();
+    }
+
+    public static Pet ofV2(PetRegisterReqDto registerDto, PhotoData profilePhotoData, Member member) {
         return builder()
                 .petName(registerDto.petName())
                 .species(registerDto.species())

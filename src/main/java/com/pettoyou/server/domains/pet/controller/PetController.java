@@ -3,6 +3,7 @@ package com.pettoyou.server.domains.pet.controller;
 import com.pettoyou.server.config.security.service.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
 import com.pettoyou.server.domains.pet.dto.request.PetRegisterAndModifyReqDto;
+import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.dto.response.PetDetailInfoRespDto;
 import com.pettoyou.server.domains.pet.dto.response.PetRegisterRespDto;
 import com.pettoyou.server.domains.pet.service.PetCommandService;
@@ -32,6 +33,15 @@ public class PetController {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
         PetRegisterRespDto response = petCommandService.petRegister(petProfileImg, petRegisterDto, principalDetails.getUserId());
+        return ApiResponse.createSuccessWithOk(response);
+    }
+
+    @PostMapping("/petv2")
+    public ResponseEntity<ApiResponse<PetRegisterRespDto>> petRegisterV2(
+            @RequestPart(value = "petRegisterDto") @Valid PetRegisterReqDto petRegisterDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        PetRegisterRespDto response = petCommandService.petRegisterV2(petRegisterDto, principalDetails.getUserId());
         return ApiResponse.createSuccessWithOk(response);
     }
 

@@ -4,6 +4,7 @@ import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.member.repository.MemberRepository;
+import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.dto.response.PetRegisterRespDto;
 import com.pettoyou.server.domains.pet.entity.Pet;
 import com.pettoyou.server.domains.pet.repository.PetRepository;
@@ -33,6 +34,20 @@ public class PetCommandServiceImpl implements PetCommandService {
         PhotoData photoData = processPhotoData(petProfileImg, null);
 
         Pet registeredPet = petRepository.save(Pet.of(petRegisterDto, photoData, member));
+
+        return PetRegisterRespDto.from(registeredPet.getPetName());
+    }
+
+    @Override
+    public PetRegisterRespDto petRegisterV2(PetRegisterReqDto petRegisterDto, Long authMemberId) {
+        Member member = findMemberById(authMemberId);
+        PhotoData petProfilePhotoData = PhotoData.of(
+                petRegisterDto.petProfilePhotoDto().bucket(),
+                petRegisterDto.petProfilePhotoDto().object(),
+                petRegisterDto.petProfilePhotoDto().url()
+        );
+
+        Pet registeredPet = petRepository.save(Pet.ofV2(petRegisterDto, petProfilePhotoData, member));
 
         return PetRegisterRespDto.from(registeredPet.getPetName());
     }

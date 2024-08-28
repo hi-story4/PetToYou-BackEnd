@@ -60,14 +60,13 @@ public class HospitalServiceImpl implements HospitalService {
     // 병원 상세 조회
     @Override
     public HospitalDetail getHospitalDetail(Long hospitalId) {
-//        return hospitalRepository.findHospitalDetailById(hospitalId);
         Hospital hospital = hospitalRepository.findById(hospitalId)
                 .orElseThrow(() -> new CustomException(CustomResponseStatus.STORE_NOT_FOUND));
 
         List<HospitalTag> tagList = hospitalRepository.findTagList(hospitalId);
+        Double ratingAvg = hospitalRepository.queryHospitalRatingAvg(hospitalId);
 
-        return HospitalDetail.from(hospital, tagList);
-
+        return HospitalDetail.from(hospital, tagList, ratingAvg);
     }
 
     @Override

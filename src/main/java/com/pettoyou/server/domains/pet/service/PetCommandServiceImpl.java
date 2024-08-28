@@ -4,6 +4,8 @@ import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.member.repository.MemberRepository;
+import com.pettoyou.server.domains.pet.dto.request.PetModifyReqDto;
+import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.dto.response.PetRegisterRespDto;
 import com.pettoyou.server.domains.pet.entity.Pet;
 import com.pettoyou.server.domains.pet.repository.PetRepository;
@@ -38,6 +40,20 @@ public class PetCommandServiceImpl implements PetCommandService {
     }
 
     @Override
+    public PetRegisterRespDto petRegisterV2(PetRegisterReqDto petRegisterDto, Long authMemberId) {
+        Member member = findMemberById(authMemberId);
+        PhotoData petProfilePhotoData = PhotoData.of(
+                petRegisterDto.petProfilePhotoDto().bucket(),
+                petRegisterDto.petProfilePhotoDto().object(),
+                petRegisterDto.petProfilePhotoDto().url()
+        );
+
+        Pet registeredPet = petRepository.save(Pet.ofV2(petRegisterDto, petProfilePhotoData, member));
+
+        return PetRegisterRespDto.from(registeredPet.getPetName());
+    }
+
+    @Override
     public void petModify(
             Long petId,
             MultipartFile petProfileImg,
@@ -50,6 +66,27 @@ public class PetCommandServiceImpl implements PetCommandService {
         PhotoData newPhotoData = processPhotoData(petProfileImg, pet.getProfilePhotoData());
 
         pet.modify(petModifyDto, newPhotoData);
+    }
+
+    @Override
+    public void petModifyV2(
+            Long petId,
+            PetModifyReqDto petModifyDto,
+            Long authMemberId
+    ) {
+        Pet pet = findPetById(petId);
+        pet.validateOwnerAuthorization(authMemberId);
+
+        PhotoData curPhotoData = pet.getProfilePhotoData();
+        if (petModifyDto.petProfilePhotoDto()!= null) {
+            curPhotoData = PhotoData.of(
+                    petModifyDto.petProfilePhotoDto().bucket(),
+                    petModifyDto.petProfilePhotoDto().object(),
+                    petModifyDto.petProfilePhotoDto().url()
+            );
+        }
+
+        pet.modifyV2(petModifyDto, curPhotoData);
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.pettoyou.server.constant.enums.BaseStatus;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.member.entity.Member;
+import com.pettoyou.server.domains.pet.dto.request.PetModifyReqDto;
+import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.entity.enums.Species;
 import com.pettoyou.server.domains.pet.dto.request.PetRegisterAndModifyReqDto;
 import com.pettoyou.server.domains.pet.entity.enums.Gender;
@@ -99,7 +101,35 @@ public class Pet extends BaseEntity {
                 .build();
     }
 
+    public static Pet ofV2(PetRegisterReqDto registerDto, PhotoData profilePhotoData, Member member) {
+        return builder()
+                .petName(registerDto.petName())
+                .species(registerDto.species())
+                .birth(registerDto.birth())
+                .petType(registerDto.petType())
+                .gender(registerDto.gender())
+                .adoptionDate(registerDto.adoptionDate() == null ? null : registerDto.adoptionDate())
+                .petMedicalInfo(PetMedicalInfo.from(registerDto.petMedicalInfoDto()))
+                .member(member)
+                .petStatus(BaseStatus.ACTIVATE)
+                .caution(registerDto.caution())
+                .profilePhotoData(profilePhotoData)
+                .build();
+    }
+
     public void modify(PetRegisterAndModifyReqDto modifyDto, PhotoData newPhoto) {
+        this.petName = modifyDto.petName();
+        this.species = modifyDto.species();
+        this.birth = modifyDto.birth();
+        this.petType = modifyDto.petType();
+        this.adoptionDate = modifyDto.adoptionDate();
+        this.caution = modifyDto.caution();
+        this.petMedicalInfo = PetMedicalInfo.from(modifyDto.petMedicalInfoDto());
+        this.profilePhotoData = newPhoto;
+    }
+
+
+    public void modifyV2(PetModifyReqDto modifyDto, PhotoData newPhoto) {
         this.petName = modifyDto.petName();
         this.species = modifyDto.species();
         this.birth = modifyDto.birth();

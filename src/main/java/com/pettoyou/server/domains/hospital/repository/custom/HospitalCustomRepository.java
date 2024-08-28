@@ -22,6 +22,7 @@ public interface HospitalCustomRepository {
 
     Page<HospitalDtoWithAddress> findHospitalBySearch(Pageable pageable, HosptialSearchQueryInfo queryInfo, Integer dayOfWeek);
 
-
     List<HospitalTag> findTagList(Long hospitalId);
+
+    Double queryHospitalRatingAvg(Long hospitalId);
 }

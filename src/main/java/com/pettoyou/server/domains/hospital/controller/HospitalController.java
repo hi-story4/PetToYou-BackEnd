@@ -38,11 +38,10 @@ public class HospitalController {
         log.info("queryInfo : {}", queryInfo);
         log.info("queryCond : {}", queryCond);
 
-
-
         Page<HospitalDtoWithDistance> response = hospitalService.getHospitalsTest(pageable, queryInfo, queryCond);
         return ApiResponse.createSuccessWithOk(response);
     }
+
     //병원 검색 조회
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<Page<HospitalDtoWithAddress>>> getSearchHospitalList(Pageable pageable, @Valid @ModelAttribute HosptialSearchQueryInfo queryInfo){

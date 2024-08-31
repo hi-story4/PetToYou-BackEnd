@@ -42,11 +42,16 @@ public class PetCommandServiceImpl implements PetCommandService {
     @Override
     public PetRegisterRespDto petRegisterV2(PetRegisterReqDto petRegisterDto, Long authMemberId) {
         Member member = findMemberById(authMemberId);
-        PhotoData petProfilePhotoData = PhotoData.of(
-                petRegisterDto.petProfilePhotoDto().bucket(),
-                petRegisterDto.petProfilePhotoDto().object(),
-                petRegisterDto.petProfilePhotoDto().url()
-        );
+
+        // Todo : 성운이가 프로필 업로드를 안할 경우 어떤 식으로 줄지에 맞춰서 코드 수정이 필요함
+        PhotoData petProfilePhotoData = PhotoData.generateDefaultPetProfilePhotoData();
+        if(petRegisterDto.petProfilePhotoDto() != null) {
+            petProfilePhotoData = PhotoData.of(
+                    petRegisterDto.petProfilePhotoDto().bucket(),
+                    petRegisterDto.petProfilePhotoDto().object(),
+                    petRegisterDto.petProfilePhotoDto().url()
+            );
+        }
 
         Pet registeredPet = petRepository.save(Pet.ofV2(petRegisterDto, petProfilePhotoData, member));
 

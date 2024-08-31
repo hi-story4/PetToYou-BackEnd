@@ -4,7 +4,7 @@ import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithAddress;
 import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithDistance;
-import com.pettoyou.server.domains.hospital.entity.HospitalTag;
+import com.pettoyou.server.domains.hospital.entity.hospital.HospitalTag;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryCond;
 import com.pettoyou.server.domains.hospital.dto.request.HosptialSearchQueryInfo;
 import com.pettoyou.server.domains.hospital.dto.response.Times;

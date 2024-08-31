@@ -6,8 +6,8 @@ import com.pettoyou.server.domains.healthNote.dto.request.HealthNoteRegistAndMod
 import com.pettoyou.server.domains.healthNote.entity.HealthNote;
 import com.pettoyou.server.domains.healthNote.repository.HealthNoteRepository;
 import com.pettoyou.server.domains.healthNote.service.HealthNoteCommandServiceImpl;
-import com.pettoyou.server.domains.hospital.entity.Hospital;
-import com.pettoyou.server.domains.hospital.repository.HospitalRepository;
+import com.pettoyou.server.domains.hospital.entity.hospital.Hospital;
+import com.pettoyou.server.domains.hospital.repository.hospital.HospitalRepository;
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.member.entity.enums.MemberStatus;
 import com.pettoyou.server.domains.member.entity.enums.OAuthProvider;

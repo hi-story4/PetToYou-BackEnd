@@ -1,4 +1,4 @@
-package com.pettoyou.server.domains.hospital.entity;
+package com.pettoyou.server.domains.hospital.entity.vet;
 
 import com.pettoyou.server.constant.enums.BaseStatus;
 import com.pettoyou.server.domains.photo.entity.PhotoData;

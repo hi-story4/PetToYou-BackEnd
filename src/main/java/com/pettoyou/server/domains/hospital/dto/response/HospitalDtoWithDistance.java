@@ -1,6 +1,6 @@
 package com.pettoyou.server.domains.hospital.dto.response;
 
-import com.pettoyou.server.domains.hospital.entity.HospitalTag;
+import com.pettoyou.server.domains.hospital.entity.hospital.HospitalTag;
 import com.pettoyou.server.domains.hospital.dto.HospitalTagDto;
 import com.pettoyou.server.domains.store.entity.enums.SubscriptionStatus;
 import lombok.Builder;

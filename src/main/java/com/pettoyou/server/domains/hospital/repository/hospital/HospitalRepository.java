@@ -1,6 +1,6 @@
-package com.pettoyou.server.domains.hospital.repository;
+package com.pettoyou.server.domains.hospital.repository.hospital;
 
-import com.pettoyou.server.domains.hospital.entity.Hospital;
+import com.pettoyou.server.domains.hospital.entity.hospital.Hospital;
 import com.pettoyou.server.domains.hospital.repository.custom.HospitalCustomRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

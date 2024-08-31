@@ -1,6 +1,6 @@
 package com.pettoyou.server.domains.hospital.dto.request;
 
-import com.pettoyou.server.domains.hospital.entity.Hospital;
+import com.pettoyou.server.domains.hospital.entity.hospital.Hospital;
 import com.pettoyou.server.domains.photo.entity.PhotoData;
 import com.pettoyou.server.domains.store.dto.request.AddressDto;
 import com.pettoyou.server.domains.store.dto.BusinessHourDto;

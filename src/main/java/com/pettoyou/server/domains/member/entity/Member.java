@@ -8,7 +8,7 @@ import com.pettoyou.server.domains.member.entity.enums.MemberStatus;
 import com.pettoyou.server.domains.member.entity.enums.OAuthProvider;
 import com.pettoyou.server.domains.member.entity.enums.RoleType;
 import com.pettoyou.server.domains.pet.entity.Pet;
-import com.pettoyou.server.domains.reserve.entity.Reserve;
+import com.pettoyou.server.domains.reservation.entity.Reserve;
 import com.pettoyou.server.domains.review.entity.Review;
 import com.pettoyou.server.domains.scrap.entity.Scrap;
 import jakarta.persistence.*;

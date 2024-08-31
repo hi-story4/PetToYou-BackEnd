@@ -1,4 +1,4 @@
-package com.pettoyou.server.domains.hospital.entity;
+package com.pettoyou.server.domains.hospital.entity.hospital;
 
 import com.pettoyou.server.domains.hospital.entity.enums.HospitalTagType;
 import jakarta.persistence.*;

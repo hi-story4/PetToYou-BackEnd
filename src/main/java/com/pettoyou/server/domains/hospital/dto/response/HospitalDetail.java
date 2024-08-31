@@ -1,8 +1,8 @@
 package com.pettoyou.server.domains.hospital.dto.response;
 
 import com.pettoyou.server.domains.hospital.dto.HospitalTagDto;
-import com.pettoyou.server.domains.hospital.entity.Hospital;
-import com.pettoyou.server.domains.hospital.entity.HospitalTag;
+import com.pettoyou.server.domains.hospital.entity.hospital.Hospital;
+import com.pettoyou.server.domains.hospital.entity.hospital.HospitalTag;
 import com.pettoyou.server.domains.store.dto.RegistrationInfoDto;
 import com.pettoyou.server.domains.store.entity.Address;
 import com.pettoyou.server.domains.store.entity.enums.SubscriptionStatus;

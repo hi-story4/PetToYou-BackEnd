@@ -2,8 +2,8 @@ package com.pettoyou.server.domains.scrap.service;
 
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
-import com.pettoyou.server.domains.hospital.entity.Hospital;
-import com.pettoyou.server.domains.hospital.repository.HospitalRepository;
+import com.pettoyou.server.domains.hospital.entity.hospital.Hospital;
+import com.pettoyou.server.domains.hospital.repository.hospital.HospitalRepository;
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.member.repository.MemberRepository;
 import com.pettoyou.server.domains.scrap.dto.response.ScrapQueryRespDto;

@@ -1,4 +1,4 @@
-package com.pettoyou.server.domains.hospital.entity;
+package com.pettoyou.server.domains.hospital.entity.hospital;
 
 
 import jakarta.persistence.*;

@@ -30,9 +30,9 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.pettoyou.server.domains.hospital.entity.QHospital.*;
-import static com.pettoyou.server.domains.hospital.entity.QHospitalTag.hospitalTag;
-import static com.pettoyou.server.domains.hospital.entity.QTagMapper.*;
+import static com.pettoyou.server.domains.hospital.entity.hospital.QHospital.*;
+import static com.pettoyou.server.domains.hospital.entity.hospital.QHospitalTag.*;
+import static com.pettoyou.server.domains.hospital.entity.hospital.QTagMapper.*;
 import static com.pettoyou.server.domains.review.entity.QReview.review;
 import static com.pettoyou.server.domains.store.entity.QBusinessHour.*;
 

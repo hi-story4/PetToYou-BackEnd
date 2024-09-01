@@ -20,10 +20,13 @@ public class BusinessHour extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "business_hour_id")
     private Long businessHourId;
+
     @NotNull
     private Integer dayOfWeek;
+
     @NotNull
     private Time startTime;
+
     @NotNull
     private Time endTime;
 

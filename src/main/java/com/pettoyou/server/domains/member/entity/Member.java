@@ -8,7 +8,6 @@ import com.pettoyou.server.domains.member.entity.enums.MemberStatus;
 import com.pettoyou.server.domains.member.entity.enums.OAuthProvider;
 import com.pettoyou.server.domains.member.entity.enums.RoleType;
 import com.pettoyou.server.domains.pet.entity.Pet;
-import com.pettoyou.server.domains.reservation.entity.Reserve;
 import com.pettoyou.server.domains.review.entity.Review;
 import com.pettoyou.server.domains.scrap.entity.Scrap;
 import jakarta.persistence.*;
@@ -64,10 +63,6 @@ public class Member extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<Pet> pets = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "member")
-    private List<Reserve> reserves = new ArrayList<>();
 
 //    @Builder.Default
 //    @OneToMany(mappedBy = "member")

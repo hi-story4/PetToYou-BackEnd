@@ -25,6 +25,7 @@ public enum CustomResponseStatus {
     ACCESS_DENIED(HttpStatus.FORBIDDEN.value(), "3000", "권한이 없습니다."),
     LOGOUT_MEMBER(HttpStatus.FORBIDDEN.value(), "3001", "로그아웃된 사용자입니다."),
     ALREADY_REGISTERED_WITH_DIFFERENT_PROVIDER(HttpStatus.CONFLICT.value(), "3002", "다른 소셜 로그인 계정으로 가입한 사용자입니다."),
+    RESERVATION_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "3003", "예약이 이미 존재합니다."),
 
     /***
      * 4000: NOT_FOUND
@@ -42,6 +43,7 @@ public enum CustomResponseStatus {
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "4008", "해당 매장을 찾을 수 없습니다."),
     HEALTH_NOTE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "4009", "해당 건강수첩을 찾을 수 없습니다."),
     STORE_PHOTO_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "4010", "해당 병원의 사진을 찾을 수 없습니다."),
+    VET_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "4011", "해당 수의사를 찾을 수 없습니다."),
     //정상응답, no content
     /***
      * 5000: NOT_MATCH

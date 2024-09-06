@@ -1,4 +1,4 @@
-package com.pettoyou.server.config.security.service;
+package com.pettoyou.server.config.security.service.member;
 
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PrincipalDetailsServiceImpl implements UserDetailsService {
     private final MemberRepository memberRepository;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email)

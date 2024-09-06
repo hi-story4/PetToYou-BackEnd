@@ -1,6 +1,6 @@
 package com.pettoyou.server.domains.healthNote.controller;
 
-import com.pettoyou.server.config.security.service.PrincipalDetails;
+import com.pettoyou.server.config.security.service.member.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
 import com.pettoyou.server.domains.healthNote.dto.response.HealthNoteSimpleInfoDto;
 import com.pettoyou.server.domains.healthNote.service.HealthNoteCommandService;

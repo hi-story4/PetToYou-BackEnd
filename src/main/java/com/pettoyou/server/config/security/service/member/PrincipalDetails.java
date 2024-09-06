@@ -1,4 +1,4 @@
-package com.pettoyou.server.config.security.service;
+package com.pettoyou.server.config.security.service.member;
 
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.member.entity.MemberRole;

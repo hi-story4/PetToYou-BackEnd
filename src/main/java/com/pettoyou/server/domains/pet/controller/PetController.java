@@ -1,6 +1,6 @@
 package com.pettoyou.server.domains.pet.controller;
 
-import com.pettoyou.server.config.security.service.PrincipalDetails;
+import com.pettoyou.server.config.security.service.member.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
 import com.pettoyou.server.domains.pet.dto.request.PetModifyReqDto;
 import com.pettoyou.server.domains.pet.dto.request.PetRegisterAndModifyReqDto;

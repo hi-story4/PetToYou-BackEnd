@@ -1,6 +1,6 @@
 package com.pettoyou.server.domains.member.controller;
 
-import com.pettoyou.server.config.security.service.PrincipalDetails;
+import com.pettoyou.server.config.security.service.member.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
 import com.pettoyou.server.domains.member.dto.request.MemberInfoModifyReqDto;
 import com.pettoyou.server.domains.member.dto.response.MemberInfoQueryDto;

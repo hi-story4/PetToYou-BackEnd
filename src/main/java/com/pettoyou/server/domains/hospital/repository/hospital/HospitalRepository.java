@@ -5,10 +5,14 @@ import com.pettoyou.server.domains.hospital.repository.custom.HospitalCustomRepo
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface HospitalRepository extends JpaRepository<Hospital, Long>, HospitalCustomRepository {
 
 
     @Query("SELECT h.storeName FROM Hospital h WHERE h.storeId = :hospitalId")
-    String getHospitalNameNameByStoreId(Long hospitalId);
+    String getHospitalNameByStoreId(Long hospitalId);
+
+    Optional<Hospital> findByStoreId(Long storeId);
 
 }

@@ -2,8 +2,10 @@ package com.pettoyou.server.domains.hospital.controller;
 
 import com.pettoyou.server.constant.dto.ApiResponse;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalDto;
+import com.pettoyou.server.domains.hospital.dto.request.hospitalAdmin.HospitalAdminSignUpReqDto;
 import com.pettoyou.server.domains.hospital.service.HospitalService;
 
+import com.pettoyou.server.domains.hospital.service.auth.HospitalAdminService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import java.util.List;
 public class HospitalControllerAdmin {
 
     private final HospitalService hospitalService;
+    private final HospitalAdminService hospitalAdminService;
 
     @PostMapping()
     public ResponseEntity<ApiResponse<String>> registerHospital(
@@ -46,5 +49,16 @@ public class HospitalControllerAdmin {
                 .toUri();
 
         return ApiResponse.createSuccessWithCreated("병원 등록 완료!", location);
+    }
+
+    /***
+     * 병원 관리자 회원가입
+     */
+    @PostMapping("sign-up")
+    public ResponseEntity<ApiResponse<String>> signUp(
+            @RequestBody HospitalAdminSignUpReqDto signUpReqDto
+    ) {
+        hospitalAdminService.singUp(signUpReqDto);
+        return ApiResponse.createSuccessWithOk("회원가입이 완료되었습니다.");
     }
 }

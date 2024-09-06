@@ -115,7 +115,7 @@ class HealthNoteQueryServiceTest {
         Pet pet = createPet(member);
 
         when(healthNoteRepository.findById(any(Long.class))).thenReturn(Optional.of(healthNote));
-        when(hospitalRepository.getHospitalNameNameByStoreId(any(Long.class))).thenReturn(hospital.getStoreName());
+        when(hospitalRepository.getHospitalNameByStoreId(any(Long.class))).thenReturn(hospital.getStoreName());
         when(memberRepository.findById(any(Long.class))).thenReturn(Optional.of(member));
         when(petRepository.getPetNameByPetId(any(Long.class))).thenReturn(pet.getPetName());
 

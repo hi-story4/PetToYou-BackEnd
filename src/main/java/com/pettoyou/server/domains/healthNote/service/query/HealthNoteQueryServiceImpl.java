@@ -42,7 +42,7 @@ public class HealthNoteQueryServiceImpl implements HealthNoteQueryService {
 
         member.validateMemberAuthorization(authMemberId);
 
-        String storeName = hospitalRepository.getHospitalNameNameByStoreId(findHealthNote.getStoreId());
+        String storeName = hospitalRepository.getHospitalNameByStoreId(findHealthNote.getStoreId());
         String petName = petRepository.getPetNameByPetId(findHealthNote.getPetId());
 
         return HealthNoteDetailInfoDto.of(findHealthNote, petName, storeName);

@@ -72,7 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // JWT 필터를 타지 않아도 되는 URI 를 해당 메서드에 설정
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] excludePath = {"/api/v1/auth/kakao", "/api/v1/auth/naver", "api/v1/auth/reissue"};
+        String[] excludePath = {"/api/v1/auth/kakao", "/api/v1/auth/naver", "api/v1/auth/reissue", "api/v1/hospital/admin/sign-up"};
         String path = request.getRequestURI();
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }

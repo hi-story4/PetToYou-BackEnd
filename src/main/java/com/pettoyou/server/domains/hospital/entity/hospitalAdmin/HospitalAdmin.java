@@ -4,6 +4,7 @@ import com.pettoyou.server.constant.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,8 +15,10 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "hospital_admin")
 public class HospitalAdmin extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hospital_admin_id")
     private Long hospitalAdminId;
 
     @NotNull
@@ -28,6 +31,21 @@ public class HospitalAdmin extends BaseEntity {
     private Long hospitalId;
 
     @NotNull
-    @OneToMany(mappedBy = "hospital_admin")
+    @OneToMany(mappedBy = "hospitalAdmin")
     private List<HospitalAdminRole> roles = new ArrayList<>();
+
+    @Builder
+    private HospitalAdmin(String username, String password, Long hospitalId) {
+        this.username = username;
+        this.password = password;
+        this.hospitalId = hospitalId;
+    }
+
+    public static HospitalAdmin of(String username, String password, Long hospitalId) {
+        return HospitalAdmin.builder()
+                .username(username)
+                .password(password)
+                .hospitalId(hospitalId)
+                .build();
+    }
 }

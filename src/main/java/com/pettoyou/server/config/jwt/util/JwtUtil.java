@@ -7,7 +7,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,17 +33,20 @@ public class JwtUtil {
     private final long ACCESS_TOKEN_EXPIRATION_TIME;
     private final long REFRESH_TOKEN_EXPIRATION_TIME;
     private final UserDetailsService userDetailsService;
+    private final UserDetailsService hospitalAdminDetailsService;
 
     public JwtUtil(
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.expiration_time.access_token}") long accessTokenExprTime,
             @Value("${jwt.expiration_time.refresh_token}") long refreshTokenExprTime,
-            UserDetailsService userDetailsService
+            @Qualifier("principalDetailsServiceImpl") UserDetailsService userDetailsService,
+            @Qualifier("hospitalAdminDetailsServiceImpl") UserDetailsService hospitalAdminDetailsService
     ) {
         this.SECRET_KEY = secretKey;
         this.ACCESS_TOKEN_EXPIRATION_TIME = accessTokenExprTime;
         this.REFRESH_TOKEN_EXPIRATION_TIME = refreshTokenExprTime;
         this.userDetailsService = userDetailsService;
+        this.hospitalAdminDetailsService = hospitalAdminDetailsService;
     }
 
     /***

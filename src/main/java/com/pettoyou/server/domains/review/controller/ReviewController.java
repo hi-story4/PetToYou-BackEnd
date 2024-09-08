@@ -31,16 +31,16 @@ public class ReviewController {
 
     ReviewService reviewService;
 
-    @PostMapping("/member/store/{storeId}/review")
+    @PostMapping("/store/{storeId}/review")
     public ResponseEntity<ApiResponse<String>> registerReview(
             @PathVariable Long storeId,
             @RequestParam Long petId,
             @RequestPart(required = false,value = "reviewImgs") List<MultipartFile> reviewImgs,
-            @RequestPart(value = "reviewDto") ReviewReqDto reviewReqDto,
+            @RequestPart(value = "reviewReqDto") ReviewReqDto reviewReqDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
             ) {
         Long userId = principalDetails.getUserId();
-
+        log.info("User Id: " + userId);
         String reviewId = reviewService.registerReiview(storeId,petId, userId, reviewImgs, reviewReqDto);
 
         String path = ServletUriComponentsBuilder.fromCurrentRequest().build().getPath();
@@ -52,7 +52,7 @@ public class ReviewController {
         return ApiResponse.createSuccessWithCreated("리뷰 등록 완료!" , location);
     }
 
-    @GetMapping("/member/store/{storeId}/review")
+    @GetMapping("/store/{storeId}/review")
     public ResponseEntity<ApiResponse<Page<ReviewRespDto>>> getReview(@PathVariable Long storeId,
                                                                       @PageableDefault(size = 10, sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable)
     {

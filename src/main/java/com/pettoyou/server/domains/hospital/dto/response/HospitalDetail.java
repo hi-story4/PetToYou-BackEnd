@@ -24,13 +24,14 @@ public record HospitalDetail(
         String additionalServiceTag,
         String storeInfo,
         String storeInfoPhoto,
+        Double ratingAvg,
         Address address,
         List<Times> businessHours,
         RegistrationInfoDto.Response registrationInfo,
         HospitalTagDto hospitalTags,
         SubscriptionStatus subscriptionStatus
 ) {
-    public static HospitalDetail from(Hospital hospital, List<HospitalTag> tagList) {
+    public static HospitalDetail from(Hospital hospital, List<HospitalTag> tagList, Double ratingAvg) {
         List<Times> businessHours = Optional.ofNullable(hospital.getBusinessHours())
                 .orElse(Collections.emptyList())
                 .stream()
@@ -45,6 +46,7 @@ public record HospitalDetail(
                 .websiteLink(hospital.getWebsiteLink())
                 .additionalServiceTag(hospital.getAdditionalServiceTag())
                 .storeInfo(hospital.getStoreInfo())
+                .ratingAvg(ratingAvg)
                 .storeInfoPhoto(hospital.getStoreInfoPhoto() == null ? null : hospital.getStoreInfoPhoto().getPhotoUrl())
                 .address(hospital.getAddress())
                 .businessHours(businessHours)

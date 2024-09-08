@@ -219,7 +219,6 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-
     @Override
     public List<HospitalTag> findTagList(Long hospitalId) {
         return jpaQueryFactory
@@ -230,6 +229,14 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
                 .fetch();
     }
 
+    @Override
+    public Double queryHospitalRatingAvg(Long hospitalId) {
+        return jpaQueryFactory
+                .select(review.rating.avg())
+                .from(review)
+                .where(review.store.storeId.eq(hospitalId))
+                .fetchOne();
+    }
 
     private BooleanExpression hospitalTagsEqSubQuery(List<Long> tagsCond) {
         // BusinessHour, Specialities, Emergency 모두 여기서 처리됨.

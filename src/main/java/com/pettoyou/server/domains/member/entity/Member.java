@@ -6,6 +6,7 @@ import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.member.entity.enums.MemberStatus;
 import com.pettoyou.server.domains.member.entity.enums.OAuthProvider;
+import com.pettoyou.server.domains.member.entity.enums.RoleType;
 import com.pettoyou.server.domains.pet.entity.Pet;
 import com.pettoyou.server.domains.reserve.entity.Reserve;
 import com.pettoyou.server.domains.review.entity.Review;
@@ -109,5 +110,11 @@ public class Member extends BaseEntity {
         if (!this.memberId.equals(authMemberId)) {
             throw new CustomException(CustomResponseStatus.MEMBER_NOT_MATCH);
         }
+    }
+
+    public List<RoleType> getAllMemberRole() {
+        return this.roles.stream()
+                .map(role -> role.getRole().getRoleType())
+                .toList();
     }
 }

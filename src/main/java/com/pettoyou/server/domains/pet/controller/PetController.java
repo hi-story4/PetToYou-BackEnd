@@ -2,7 +2,9 @@ package com.pettoyou.server.domains.pet.controller;
 
 import com.pettoyou.server.config.security.service.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
+import com.pettoyou.server.domains.pet.dto.request.PetModifyReqDto;
 import com.pettoyou.server.domains.pet.dto.request.PetRegisterAndModifyReqDto;
+import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.dto.response.PetDetailInfoRespDto;
 import com.pettoyou.server.domains.pet.dto.response.PetRegisterRespDto;
 import com.pettoyou.server.domains.pet.service.PetCommandService;
@@ -35,6 +37,15 @@ public class PetController {
         return ApiResponse.createSuccessWithOk(response);
     }
 
+    @PostMapping("/petv2")
+    public ResponseEntity<ApiResponse<PetRegisterRespDto>> petRegisterV2(
+            @RequestBody @Valid PetRegisterReqDto petRegisterDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        PetRegisterRespDto response = petCommandService.petRegisterV2(petRegisterDto, principalDetails.getUserId());
+        return ApiResponse.createSuccessWithOk(response);
+    }
+
     @PutMapping("/pet/{id}")
     public ResponseEntity<ApiResponse<String>> petModify(
             @PathVariable Long id,
@@ -43,6 +54,16 @@ public class PetController {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
         petCommandService.petModify(id, petProfileImg, petRegisterDto, principalDetails.getUserId());
+        return ApiResponse.createSuccessWithOk("반려동물 정보 수정 완료");
+    }
+
+    @PutMapping("/petv2/{id}")
+    public ResponseEntity<ApiResponse<String>> petModifyV2(
+            @PathVariable Long id,
+            @RequestBody @Valid PetModifyReqDto petRegisterDto,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        petCommandService.petModifyV2(id, petRegisterDto, principalDetails.getUserId());
         return ApiResponse.createSuccessWithOk("반려동물 정보 수정 완료");
     }
 

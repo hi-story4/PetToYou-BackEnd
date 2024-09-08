@@ -55,7 +55,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/api/v1/member/**").hasRole("MEMBER")
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/hospital_admin/**").hasRole("HOSPITAL")
+                        .requestMatchers("/api/v1/hospital/**").hasRole("HOSPITAL")
                         .anyRequest().permitAll()
                 )
                 // CORS 해결하기 위한 코드 추가

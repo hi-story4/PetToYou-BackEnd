@@ -43,6 +43,7 @@ public enum CustomResponseStatus {
     HEALTH_NOTE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "4009", "해당 건강수첩을 찾을 수 없습니다."),
     STORE_PHOTO_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "4010", "해당 병원의 사진을 찾을 수 없습니다."),
     //정상응답, no content
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "4011", "해당 리뷰를 찾을 수 없습니다."),
     /***
      * 5000: NOT_MATCH
      */

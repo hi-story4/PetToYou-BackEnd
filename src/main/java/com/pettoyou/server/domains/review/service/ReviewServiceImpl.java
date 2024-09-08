@@ -13,6 +13,7 @@ import com.pettoyou.server.domains.store.repository.StoreRepository;
 import com.querydsl.core.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +25,12 @@ import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
-    StoreRepository storeRepository;
-    ReviewRepository reviewRepository;
-    PetRepository petRepository;
+    private final StoreRepository storeRepository;
+    private final ReviewRepository reviewRepository;
+    private final PetRepository petRepository;
 
 
     public String registerReiview(Long storeId, Long petId,  Long userId, List<MultipartFile> reviewImgs, ReviewReqDto reviewReqDto){
@@ -37,8 +39,9 @@ public class ReviewServiceImpl implements ReviewService {
         String storeType = store.getDtype();
         //병원 or 미용실
         Review reviewEntity = ReviewReqDto.toEntity(store, pet, userId, reviewReqDto, storeType);
-        reviewRepository.save(reviewEntity);
-        return reviewEntity.getReviewId().toString();
+        Review result = reviewRepository.save(reviewEntity);
+        log.info("reviwId : " + result.getReviewId());
+        return result.getReviewId().toString();
     }
     public Page<ReviewRespDto> getReview(Long storeId, Pageable pageable){
         Page<Tuple> reviewAndPet = reviewRepository.findReviewsFetchJoinPetsByStoreId(storeId, pageable);

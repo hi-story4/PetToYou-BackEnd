@@ -33,7 +33,8 @@ public class Review extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private BaseStatus reviewStatus;
+    @Builder.Default
+    private BaseStatus reviewStatus = BaseStatus.ACTIVATE;
 
     @Builder.Default
     @NotNull

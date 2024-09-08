@@ -22,9 +22,11 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
 
 
     private final JPAQueryFactory jpaQueryFactory;
-    QueryDslUtil queryDslUtil;
-    public ReviewCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
+    private final QueryDslUtil queryDslUtil;
+
+    public ReviewCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory, QueryDslUtil queryDslUtil) {
         this.jpaQueryFactory = jpaQueryFactory;
+        this.queryDslUtil = queryDslUtil;
     }
 
     public Page<Tuple> findReviewsFetchJoinPetsByStoreId(Long storeId, Pageable pageable)

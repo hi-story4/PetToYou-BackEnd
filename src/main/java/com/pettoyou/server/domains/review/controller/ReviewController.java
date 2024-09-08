@@ -29,7 +29,7 @@ import java.util.List;
 @Slf4j
 public class ReviewController {
 
-    ReviewService reviewService;
+    private final ReviewService reviewService;
 
     @PostMapping("/store/{storeId}/review")
     public ResponseEntity<ApiResponse<String>> registerReview(

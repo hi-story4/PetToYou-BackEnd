@@ -44,11 +44,7 @@ public class ReviewServiceImpl implements ReviewService {
         return result.getReviewId().toString();
     }
     public Page<ReviewRespDto> getReview(Long storeId, Pageable pageable){
-        Page<Tuple> reviewAndPet = reviewRepository.findReviewsFetchJoinPetsByStoreId(storeId, pageable);
-         List<ReviewRespDto> result = reviewAndPet.stream()
-                 .map(ReviewRespDto::toDto).toList();
-
-         return new PageImpl<>(result, reviewAndPet.getPageable(), reviewAndPet.getTotalElements());
+       return reviewRepository.findReviewsFetchJoinPetsByStoreId(storeId, pageable);
     }
     public void deleteReview(Long reivewId){
         reviewRepository.deleteById(reivewId);

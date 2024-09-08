@@ -54,7 +54,7 @@ public class ReviewController {
 
     @GetMapping("/store/{storeId}/review")
     public ResponseEntity<ApiResponse<Page<ReviewRespDto>>> getReview(@PathVariable Long storeId,
-                                                                      @PageableDefault(size = 10, sort = "created_at", direction = Sort.Direction.DESC) Pageable pageable)
+                                                                      @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable)
     {
         Page<ReviewRespDto> reviewRespDto = reviewService.getReview(storeId, pageable);
         return ApiResponse.createSuccessWithOk(reviewRespDto);

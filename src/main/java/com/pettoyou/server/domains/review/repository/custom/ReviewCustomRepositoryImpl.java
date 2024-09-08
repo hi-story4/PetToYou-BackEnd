@@ -1,23 +1,27 @@
 package com.pettoyou.server.domains.review.repository.custom;
 
+import com.pettoyou.server.domains.review.dto.ReviewRespDto;
 import com.pettoyou.server.domains.review.entity.Review;
 import com.pettoyou.server.util.QueryDslUtil;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.pettoyou.server.domains.pet.entity.QPet.pet;
 import static com.pettoyou.server.domains.review.entity.QReview.review;
 
 @Repository
+@Slf4j
 public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
 
 
@@ -29,7 +33,7 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
         this.queryDslUtil = queryDslUtil;
     }
 
-    public Page<Tuple> findReviewsFetchJoinPetsByStoreId(Long storeId, Pageable pageable)
+    public Page<ReviewRespDto> findReviewsFetchJoinPetsByStoreId(Long storeId, Pageable pageable)
     {
         //기본 order (상단 고정 기능)
         OrderSpecifier<?> pinnedOrder = review.pinned.desc();
@@ -39,19 +43,30 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
         OrderSpecifier<?>[] combinedOrder = Stream.concat(Stream.of(pinnedOrder), Stream.of(pageableOrder))
                 .toArray(OrderSpecifier[]::new);
 
-        QueryResults<Tuple> results = jpaQueryFactory.select(review, review.pet)
+
+        List<Tuple> results = jpaQueryFactory.select(review, pet.petName, pet.birth, pet.species)
                 .from(review)
                 .join(review.pet, pet).fetchJoin()
                 .where(review.store.storeId.eq(storeId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(combinedOrder)
-                .fetchResults();
-        //havgin, groupby에서는 deprecated ->추후 변경 필요.
+                .fetch();
 
-        List<Tuple> content = results.getResults();
-        long total = results.getTotal();
-        return new PageImpl<>(content, pageable, total);
+        JPAQuery<Long> countQuery = jpaQueryFactory.select(review.count())
+                .from(review)
+                .join(review.pet, pet).fetchJoin()
+                .where(review.store.storeId.eq(storeId));
+
+
+        List<ReviewRespDto> content = results.stream()
+                .map(result -> ReviewRespDto
+                        .toDto(result.get(review), result.get(pet.petName), result.get(pet.species),result.get(pet.birth)))
+                .collect(Collectors.toList());
+
+
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
     public long updatePinned(Long reviewId, Integer pinned)

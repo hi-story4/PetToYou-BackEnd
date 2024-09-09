@@ -1,10 +1,10 @@
 //package com.pettoyou.server;
 //
-//import com.pettoyou.server.hospital.dto.HospitalTagDto;
-//import com.pettoyou.server.hospital.entity.Hospital;
-//import com.pettoyou.server.hospital.entity.HospitalTag;
-//import com.pettoyou.server.hospital.entity.TagMapper;
-//import com.pettoyou.server.hospital.entity.enums.HospitalTagType;
+//import com.pettoyou.server.domains.hospital.dto.HospitalTagDto;
+//import com.pettoyou.server.domains.hospital.entity.Hospital;
+//import com.pettoyou.server.domains.hospital.entity.HospitalTag;
+//import com.pettoyou.server.domains.hospital.entity.TagMapper;
+//import com.pettoyou.server.domains.hospital.entity.enums.HospitalTagType;
 //import org.junit.jupiter.api.Test;
 //
 //import java.util.Arrays;

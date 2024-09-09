@@ -68,9 +68,6 @@ public class Member extends BaseEntity {
 //    @OneToMany(mappedBy = "member")
 //    private List<Alarm> alarms = new ArrayList<>();
 
-    @Builder.Default
-    @OneToMany(mappedBy = "member")
-    private List<Review> reviews = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "member")

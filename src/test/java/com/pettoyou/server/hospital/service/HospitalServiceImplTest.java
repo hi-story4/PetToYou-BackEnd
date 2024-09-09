@@ -1,4 +1,4 @@
-package com.pettoyou.server.hospital.service;
+package com.pettoyou.server.domains.hospital.service;
 
 import com.pettoyou.server.constant.enums.BaseStatus;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
@@ -110,7 +110,6 @@ class HospitalServiceImplTest {
             .businessHours(Arrays.asList(new BusinessHour(1L, 1, Time.valueOf("09:00:00"), Time.valueOf("18:00:00"), null, null, true, hospital)))
             .registrationInfo(RegistrationInfo.builder()
                     .registrationInfoId(1L)
-                    .storeType(StoreType.HOSPITAL)
                     .ceoName("ceoName")
                     .ceoPhone("ceoPhone")
                     .ceoEmail("ceoEmail")
@@ -183,7 +182,6 @@ class HospitalServiceImplTest {
         RegistrationInfo registrationInfo = hospitalSuccess.getRegistrationInfo();
         assertThat(registrationInfo).isNotNull();
         assertThat(registrationInfo.getRegistrationInfoId()).isEqualTo(1L);
-        assertThat(registrationInfo.getStoreType()).isEqualTo(StoreType.HOSPITAL);
         assertThat(registrationInfo.getCeoName()).isEqualTo("ceoName");
         assertThat(registrationInfo.getCeoPhone()).isEqualTo("ceoPhone");
         assertThat(registrationInfo.getCeoEmail()).isEqualTo("ceoEmail");

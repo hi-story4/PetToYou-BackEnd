@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             handleBlacklistedToken(resolveToken);
-
+            log.info("jwt principal 인가 체크");
             Authentication authentication = jwtUtil.getAuthentication(resolveToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (CustomException e) {

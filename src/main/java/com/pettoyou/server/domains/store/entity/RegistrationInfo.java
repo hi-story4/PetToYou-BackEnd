@@ -18,9 +18,6 @@ public class RegistrationInfo extends BaseEntity {
     @Column(name = "registration_info_id")
     private Long registrationInfoId;
 
-
-    @Enumerated(EnumType.STRING)
-    private StoreType storeType;
     @NotNull
     private String ceoName;
     private String ceoPhone;

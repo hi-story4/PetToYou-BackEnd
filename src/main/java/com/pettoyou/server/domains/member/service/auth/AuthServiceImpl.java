@@ -1,12 +1,12 @@
 package com.pettoyou.server.domains.member.service.auth;
 
-import com.pettoyou.server.config.jwt.util.TokenUserType;
+import com.pettoyou.server.domains.auth.enums.TokenUserType;
 import com.pettoyou.server.domains.auth.AuthTokenGenerator;
 import com.pettoyou.server.domains.auth.OAuthInfoResponse;
 import com.pettoyou.server.domains.auth.OAuthLoginParams;
 import com.pettoyou.server.domains.auth.RequestOAuthInfoService;
 import com.pettoyou.server.config.jwt.util.JwtUtil;
-import com.pettoyou.server.config.jwt.util.TokenType;
+import com.pettoyou.server.domains.auth.enums.TokenType;
 import com.pettoyou.server.config.redis.util.RedisUtil;
 import com.pettoyou.server.constant.entity.AuthTokens;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;

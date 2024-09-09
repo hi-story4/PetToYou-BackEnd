@@ -8,7 +8,7 @@ import com.pettoyou.server.domains.auth.kakao.KakaoLoginParam;
 import com.pettoyou.server.domains.auth.naver.NaverInfoResponse;
 import com.pettoyou.server.domains.auth.naver.NaverLoginParam;
 import com.pettoyou.server.config.jwt.util.JwtUtil;
-import com.pettoyou.server.config.jwt.util.TokenType;
+import com.pettoyou.server.domains.auth.enums.TokenType;
 import com.pettoyou.server.config.redis.util.RedisUtil;
 import com.pettoyou.server.constant.entity.AuthTokens;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;

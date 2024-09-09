@@ -1,8 +1,8 @@
 package com.pettoyou.server.domains.auth;
 
 import com.pettoyou.server.config.jwt.util.JwtUtil;
-import com.pettoyou.server.config.jwt.util.TokenType;
-import com.pettoyou.server.config.jwt.util.TokenUserType;
+import com.pettoyou.server.domains.auth.enums.TokenType;
+import com.pettoyou.server.domains.auth.enums.TokenUserType;
 import com.pettoyou.server.constant.entity.AuthTokens;
 import com.pettoyou.server.domains.member.entity.enums.RoleType;
 import lombok.RequiredArgsConstructor;

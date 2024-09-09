@@ -1,5 +1,7 @@
 package com.pettoyou.server.config.jwt.util;
 
+import com.pettoyou.server.domains.auth.enums.TokenType;
+import com.pettoyou.server.domains.auth.enums.TokenUserType;
 import com.pettoyou.server.domains.member.entity.enums.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

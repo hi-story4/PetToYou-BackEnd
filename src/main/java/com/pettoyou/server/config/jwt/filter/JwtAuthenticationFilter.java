@@ -42,7 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             handleBlacklistedToken(resolveToken);
-            log.info("jwt principal 인가 체크");
             Authentication authentication = jwtUtil.getAuthentication(resolveToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (CustomException e) {
@@ -69,11 +68,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         request.setAttribute(EXCEPTION, status.getMessage());
     }
 
-    // JWT 필터를 타지 않아도 되는 URI 를 해당 메서드에 설정
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] excludePath = {"/api/v1/auth/kakao", "/api/v1/auth/naver", "api/v1/auth/reissue", "api/v1/hospital/admin/sign-up"};
+        String[] excludePath = {
+                "/api/v1/auth/kakao/callback",
+                "/api/v1/auth/naver/callback",
+                "/api/v1/auth/reissue",
+                "/api/v1/hospital/admin/sign-up",
+                "/api/v1/hospital/admin/sign-in",
+                "/favicon.ico"
+        };
         String path = request.getRequestURI();
+        log.info("path : {}", path);
+        log.info("is Same Path? : {}", Arrays.stream(excludePath).anyMatch(path::startsWith));
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
 }

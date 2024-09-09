@@ -101,7 +101,7 @@ class AuthServiceTest {
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(kakaoInfoResponse);
         when(redisUtil.getData(anyString())).thenReturn(null);
         when(jwtUtil.getExpiration(any(TokenType.class))).thenReturn(authTokens.exprTime());
-        when(jwtUtil.createToken(anyString(), anyList(), any(TokenType.class))).thenReturn(authTokens.refreshToken());
+        when(jwtUtil.createMemberToken(anyString(), anyList(), any(TokenType.class))).thenReturn(authTokens.refreshToken());
         when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
 
         // when
@@ -152,7 +152,7 @@ class AuthServiceTest {
         when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(naverInfoResponse);
         when(jwtUtil.getExpiration(any(TokenType.class))).thenReturn(authTokens.exprTime());
-        when(jwtUtil.createToken(anyString(), anyList(), any(TokenType.class))).thenReturn(authTokens.refreshToken());
+        when(jwtUtil.createMemberToken(anyString(), anyList(), any(TokenType.class))).thenReturn(authTokens.refreshToken());
         when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
 
         // when

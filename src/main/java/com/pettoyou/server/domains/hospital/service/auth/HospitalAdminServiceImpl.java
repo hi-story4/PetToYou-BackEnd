@@ -1,8 +1,12 @@
 package com.pettoyou.server.domains.hospital.service.auth;
 
+import com.pettoyou.server.config.jwt.util.JwtUtil;
+import com.pettoyou.server.config.jwt.util.TokenType;
+import com.pettoyou.server.config.redis.util.RedisUtil;
 import com.pettoyou.server.constant.entity.AuthTokens;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
+import com.pettoyou.server.domains.auth.AuthTokenGenerator;
 import com.pettoyou.server.domains.hospital.dto.request.hospitalAdmin.HospitalAdminSignInReqDto;
 import com.pettoyou.server.domains.hospital.dto.request.hospitalAdmin.HospitalAdminSignUpReqDto;
 import com.pettoyou.server.domains.hospital.entity.hospital.Hospital;
@@ -19,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,13 +35,19 @@ public class HospitalAdminServiceImpl implements HospitalAdminService {
     private final HospitalAdminRoleRepository hospitalAdminRoleRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RedisUtil redisUtil;
+    private final JwtUtil jwtUtil;
+    private final AuthTokenGenerator authTokenGenerator;
+
+    private static final String RT = "RT:";
+    private static final String LOGOUT = "LOGOUT";
 
     @Override
     public void singUp(HospitalAdminSignUpReqDto signUpReqDto) {
         // Valid 체크
         // 1. 해당 username이 중복되지는 않는지
         Optional<HospitalAdmin> isValidUsername = hospitalAdminRepository.findByUsername(signUpReqDto.username());
-        if(isValidUsername.isPresent()) {
+        if (isValidUsername.isPresent()) {
             throw new CustomException(CustomResponseStatus.USERNAME_ALREADY_EXIST);
         }
 
@@ -61,7 +72,24 @@ public class HospitalAdminServiceImpl implements HospitalAdminService {
 
     @Override
     public AuthTokens signIn(HospitalAdminSignInReqDto signInReqDto) {
-        return null;
+        // 아이디가 일치하지 않는 경우
+        HospitalAdmin hospitalAdmin = hospitalAdminRepository.findByUsername(signInReqDto.username()).orElseThrow(
+                () -> new CustomException(CustomResponseStatus.LOGIN_FAILED)
+        );
+
+        // 비밀번호가 일치하지 않는 경우
+        if (!verifyPassword(signInReqDto.password(), hospitalAdmin.getPassword())) {
+            throw new CustomException(CustomResponseStatus.LOGIN_FAILED);
+        }
+
+        List<RoleType> adminRoles = hospitalAdmin.getAllHospitalAdminRole();
+        String refreshToken = redisUtil.getData(RT + hospitalAdmin.getUsername());
+        if (refreshToken == null) {
+            refreshToken = jwtUtil.createHospitalAdminToken(hospitalAdmin.getUsername(), adminRoles, TokenType.REFRESH_TOKEN);
+            redisUtil.setData(RT + hospitalAdmin.getUsername(), refreshToken, jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
+        }
+
+        return authTokenGenerator.generateAdminToken(hospitalAdmin.getUsername(), adminRoles, refreshToken);
     }
 
     private boolean verifyPassword(String rawPassword, String encodedPassword) {

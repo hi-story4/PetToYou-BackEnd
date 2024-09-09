@@ -15,14 +15,19 @@ public class AuthTokenGenerator {
     private final JwtUtil jwtUtil;
 
     public AuthTokens generate(String email, List<RoleType> roles) {
-        String accessToken = jwtUtil.createToken(email, roles, TokenType.ACCESS_TOKEN);
-        String refreshToken = jwtUtil.createToken(email, null, TokenType.REFRESH_TOKEN);
+        String accessToken = jwtUtil.createMemberToken(email, roles, TokenType.ACCESS_TOKEN);
+        String refreshToken = jwtUtil.createMemberToken(email, null, TokenType.REFRESH_TOKEN);
 
         return AuthTokens.of(accessToken, refreshToken, jwtUtil.getExpiration(TokenType.ACCESS_TOKEN));
     }
 
     public AuthTokens generate(String email, List<RoleType> roles, String refreshToken) {
-        String accessToken = jwtUtil.createToken(email, roles, TokenType.ACCESS_TOKEN);
+        String accessToken = jwtUtil.createMemberToken(email, roles, TokenType.ACCESS_TOKEN);
+        return AuthTokens.of(accessToken, refreshToken, jwtUtil.getExpiration(TokenType.ACCESS_TOKEN));
+    }
+
+    public AuthTokens generateAdminToken(String username, List<RoleType> roles, String refreshToken) {
+        String accessToken = jwtUtil.createHospitalAdminToken(username, roles, TokenType.ACCESS_TOKEN);
         return AuthTokens.of(accessToken, refreshToken, jwtUtil.getExpiration(TokenType.ACCESS_TOKEN));
     }
 }

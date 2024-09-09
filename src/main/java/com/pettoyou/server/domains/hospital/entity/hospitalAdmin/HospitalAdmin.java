@@ -1,6 +1,7 @@
 package com.pettoyou.server.domains.hospital.entity.hospitalAdmin;
 
 import com.pettoyou.server.constant.entity.BaseEntity;
+import com.pettoyou.server.domains.member.entity.enums.RoleType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -47,5 +48,11 @@ public class HospitalAdmin extends BaseEntity {
                 .password(password)
                 .hospitalId(hospitalId)
                 .build();
+    }
+
+    public List<RoleType> getAllHospitalAdminRole() {
+        return this.roles.stream()
+                .map(role -> role.getRole().getRoleType())
+                .toList();
     }
 }

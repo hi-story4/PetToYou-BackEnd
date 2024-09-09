@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +25,10 @@ import java.util.List;
 @Slf4j
 public class JwtUtil {
     private static final String EMAIL = "email";
+    private static final String USERNAME = "username";
+    private static final String TOKEN_TYPE = "token_type";
+    private static final String TOKEN_TYPE_MEMBER = "MEMBER";
+    private static final String TOKEN_TYPE_H_ADMIN = "HOSPITAL_ADMIN";
     private static final String ROLE = "role";
     private static final String BEARER = "Bearer ";
 
@@ -85,7 +88,7 @@ public class JwtUtil {
 
     /***
      * @param token : 요청이 들어온 토큰
-     * @return : 토큰속(claim)에 있는 클라이언트의 email을 리턴
+     * @return : 토큰속(claim)에 있는 클라이언트의 email 리턴
      */
     public String getEmailInToken(String token) {
         return extractAllClaims(token).get(EMAIL, String.class);
@@ -93,11 +96,34 @@ public class JwtUtil {
 
     /***
      * @param token : 요청이 들어온 토큰
+     * @return : 토큰속(claim)에 있는 클라이언트의 username 리턴
+     */
+    public String getUsernameInToken(String token) {
+        return extractAllClaims(token).get(USERNAME, String.class);
+    }
+
+    public String getTokenTypeInToken(String token) {
+        return extractAllClaims(token).get(TOKEN_TYPE, String.class);
+    }
+
+
+    /***
+     * @param token : 요청이 들어온 토큰
      * @return : 토큰을 이용하여 로그인 된 UPA 객체를 가져옴 -> UPA 객체 안에 유저의 권한들이 담겨 있음
      */
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(getEmailInToken(token));
+        UserDetails userDetails = loadUserDetailsByToken(token);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    private UserDetails loadUserDetailsByToken(String token) {
+        String username = getTokenTypeInToken(token).equals(TOKEN_TYPE_MEMBER)
+                ? getUsernameInToken(token)
+                : getEmailInToken(token);
+
+        return getTokenTypeInToken(token).equals(TOKEN_TYPE_MEMBER)
+                ? hospitalAdminDetailsService.loadUserByUsername(username)
+                : userDetailsService.loadUserByUsername(username);
     }
 
     /***
@@ -107,8 +133,8 @@ public class JwtUtil {
      * @param tokenType : 액세스 토큰과 리프레시 토큰을 구분짓기 위한 토큰타입
      * @return : 토큰 타입에 맞는 토큰을 생성하여 리턴
      */
-    public String createToken(String email, List<RoleType> roles, TokenType tokenType) {
-        Claims claims = createClaims(email, roles);
+    public String createMemberToken(String email, List<RoleType> roles, TokenType tokenType) {
+        Claims claims = createClaimsWithEmail(email, roles);
 
         long expirationTime = getExpirationTime(tokenType);
 
@@ -120,9 +146,39 @@ public class JwtUtil {
                 .compact();
     }
 
-    private Claims createClaims(String email, List<RoleType> roles) {
+    /***
+     * @param username : claim 에 넣기 위한 클라이언트의 username
+     * @param roles : claim에 넣기 위한 클라이언트의 권한들
+     * @param tokenType : 액세스 토큰과 리프레시 토큰을 구분짓기 위한 토큰타입
+     * @return : 토큰 타입에 맞는 토큰을 생성하여 리턴
+     */
+    public String createHospitalAdminToken(String username, List<RoleType> roles, TokenType tokenType) {
+        Claims claims = createClaimsWithUsername(username, roles);
+
+        long expirationTime = getExpirationTime(tokenType);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(getSigningKey(SECRET_KEY), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    private Claims createClaimsWithEmail(String email, List<RoleType> roles) {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put(EMAIL, email);
+        claims.put(TOKEN_TYPE, TOKEN_TYPE_H_ADMIN);
+        if (roles != null && !roles.isEmpty()) {
+            claims.put(ROLE, roles.stream().map(Enum::name).toList());
+        }
+        return claims;
+    }
+
+    private Claims createClaimsWithUsername(String username, List<RoleType> roles) {
+        Claims claims = Jwts.claims().setSubject(username);
+        claims.put(USERNAME, username);
+        claims.put(TOKEN_TYPE, TOKEN_TYPE_MEMBER);
         if (roles != null && !roles.isEmpty()) {
             claims.put(ROLE, roles.stream().map(Enum::name).toList());
         }

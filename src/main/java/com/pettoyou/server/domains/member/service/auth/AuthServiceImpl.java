@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
 
         String refreshToken = redisUtil.getData(RT + findMember.getEmail());
         if (refreshToken == null) {
-            refreshToken = jwtUtil.createToken(findMember.getEmail(), memberRoles, TokenType.REFRESH_TOKEN);
+            refreshToken = jwtUtil.createMemberToken(findMember.getEmail(), memberRoles, TokenType.REFRESH_TOKEN);
             redisUtil.setData(RT + findMember.getEmail(), refreshToken, jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
         }
 

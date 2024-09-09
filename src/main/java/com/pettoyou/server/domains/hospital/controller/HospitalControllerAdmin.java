@@ -1,11 +1,14 @@
 package com.pettoyou.server.domains.hospital.controller;
 
 import com.pettoyou.server.constant.dto.ApiResponse;
+import com.pettoyou.server.constant.entity.AuthTokens;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalDto;
+import com.pettoyou.server.domains.hospital.dto.request.hospitalAdmin.HospitalAdminSignInReqDto;
 import com.pettoyou.server.domains.hospital.dto.request.hospitalAdmin.HospitalAdminSignUpReqDto;
 import com.pettoyou.server.domains.hospital.service.HospitalService;
 
 import com.pettoyou.server.domains.hospital.service.auth.HospitalAdminService;
+import com.pettoyou.server.domains.member.dto.response.LoginAndReissueRespDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +63,14 @@ public class HospitalControllerAdmin {
     ) {
         hospitalAdminService.singUp(signUpReqDto);
         return ApiResponse.createSuccessWithOk("회원가입이 완료되었습니다.");
+    }
+
+    @PostMapping("sign-in")
+    public ResponseEntity<ApiResponse<LoginAndReissueRespDto>> singIn(
+            @RequestBody HospitalAdminSignInReqDto signInReqDto
+    ) {
+        AuthTokens authTokens = hospitalAdminService.signIn(signInReqDto);
+
+        return ApiResponse.createSuccessWithOk(LoginAndReissueRespDto.from(authTokens));
     }
 }

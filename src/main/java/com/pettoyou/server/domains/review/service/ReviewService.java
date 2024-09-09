@@ -1,5 +1,6 @@
 package com.pettoyou.server.domains.review.service;
 
+import com.pettoyou.server.config.security.service.PrincipalDetails;
 import com.pettoyou.server.domains.review.dto.ReviewReqDto;
 import com.pettoyou.server.domains.review.dto.ReviewRespDto;
 import org.springframework.data.domain.Page;
@@ -15,9 +16,9 @@ public interface ReviewService {
 
         Page<ReviewRespDto> getReview(Long storeId, Pageable pageable);
 
-        void deleteReview(Long reivewId);
+        void deleteReview(Long reivewId, PrincipalDetails principalDetails);
 
-        void putReview(Long reivewId,Long userId, List<MultipartFile> reviewImgs, ReviewReqDto reviewReqDto);
+        void putReview(Long reivewId, PrincipalDetails principalDetails, List<MultipartFile> reviewImgs, ReviewReqDto reviewReqDto);
 
         long patchReviewPinned(Long reivewId, Integer pinned);
 

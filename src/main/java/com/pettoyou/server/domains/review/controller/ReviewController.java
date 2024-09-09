@@ -67,7 +67,7 @@ public class ReviewController {
     public ResponseEntity<ApiResponse<String>> deleteReview(@PathVariable Long reivewId, @RequestParam Long memberId,
                                                             @AuthenticationPrincipal PrincipalDetails principalDetails)
     {
-        reviewService.deleteReview(reivewId);
+        reviewService.deleteReview(reivewId, principalDetails);
         return ApiResponse.createSuccessWithOk("리뷰 삭제 완료!");
 
     }
@@ -82,7 +82,8 @@ public class ReviewController {
                                                          @AuthenticationPrincipal PrincipalDetails principalDetails)
     {
 
-        reviewService.putReview(reivewId, principalDetails.getUserId(), reviewImgs, reviewReqDto);
+
+        reviewService.putReview(reivewId, principalDetails, reviewImgs, reviewReqDto);
         return ApiResponse.createSuccessWithOk("리뷰 수정 완료");
 
     }
@@ -94,6 +95,7 @@ public class ReviewController {
     public ResponseEntity<ApiResponse<String>> patchReviewPinned(@PathVariable Long reivewId,
                                                                @RequestParam Integer pinned)
     {
+
         long result = reviewService.patchReviewPinned(reivewId, pinned);
         if(result<1) {throw new CustomException(CustomResponseStatus.PINNED_FAIL);}
         return ApiResponse.createSuccessWithOk("상단고정 수정 완료");

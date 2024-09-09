@@ -31,7 +31,8 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping("/store/{storeId}/review")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('MEMBER', 'ADMIN', 'HOSPITAL')")
+    @PostMapping("/member/store/{storeId}/review")
     public ResponseEntity<ApiResponse<String>> registerReview(
             @PathVariable Long storeId,
             @RequestParam Long petId,
@@ -52,7 +53,7 @@ public class ReviewController {
         return ApiResponse.createSuccessWithCreated("리뷰 등록 완료!" , location);
     }
 
-    @GetMapping("/store/{storeId}/review")
+    @GetMapping("/member/store/{storeId}/review")
     public ResponseEntity<ApiResponse<Page<ReviewRespDto>>> getReview(@PathVariable Long storeId,
                                                                       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable)
     {
@@ -62,7 +63,7 @@ public class ReviewController {
 
 
     @PreAuthorize("isAuthenticated() and (( #memberId == #principalDetails.userId) or hasRole('ADMIN'))")
-    @DeleteMapping("/review/{reivewId}")
+    @DeleteMapping("/member/review/{reivewId}")
     public ResponseEntity<ApiResponse<String>> deleteReview(@PathVariable Long reivewId, @RequestParam Long memberId,
                                                             @AuthenticationPrincipal PrincipalDetails principalDetails)
     {
@@ -73,7 +74,7 @@ public class ReviewController {
 
     //수정기능
     @PreAuthorize("isAuthenticated() and (( #memberId == #principalDetails.userId) or hasRole('ADMIN'))")
-    @PutMapping("/review/{reivewId}")
+    @PutMapping("/member/review/{reivewId}")
     public ResponseEntity<ApiResponse<String>> putReview(@PathVariable Long reivewId,
                                                          @RequestPart(value="reviewReqDto") ReviewReqDto reviewReqDto,
                                                          @RequestPart(value = "reviewImgs") List<MultipartFile> reviewImgs,
@@ -87,8 +88,8 @@ public class ReviewController {
 
     //상단고정 기능
     //병원관리자 본인 병원인지 로직 추가, PrincipalDetails 추가.
-    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
-    @PatchMapping("/review/{reivewId}/pinned")
+    @PreAuthorize("isAuthenticated() and hasRole('HOSPITAL')")
+    @PatchMapping("/hospital/review/{reivewId}/pinned")
     public ResponseEntity<ApiResponse<String>> patchReviewPinned(@PathVariable Long reivewId,
                                                                @RequestParam Integer pinned)
     {

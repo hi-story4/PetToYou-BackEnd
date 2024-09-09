@@ -75,6 +75,7 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                 .set(review.pinned, pinned)
                 .where(review.reviewId.eq(reviewId))
                 .execute();
+
         return result;
 
     }

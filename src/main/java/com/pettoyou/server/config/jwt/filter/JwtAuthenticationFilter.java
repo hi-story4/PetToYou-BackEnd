@@ -79,8 +79,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 "/favicon.ico"
         };
         String path = request.getRequestURI();
-        log.info("path : {}", path);
-        log.info("is Same Path? : {}", Arrays.stream(excludePath).anyMatch(path::startsWith));
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
 }

@@ -2,6 +2,7 @@ package com.pettoyou.server.domains.hospital.service.auth;
 
 import com.pettoyou.server.config.jwt.util.JwtUtil;
 import com.pettoyou.server.config.jwt.util.TokenType;
+import com.pettoyou.server.config.jwt.util.TokenUserType;
 import com.pettoyou.server.config.redis.util.RedisUtil;
 import com.pettoyou.server.constant.entity.AuthTokens;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
@@ -85,7 +86,7 @@ public class HospitalAdminServiceImpl implements HospitalAdminService {
         List<RoleType> adminRoles = hospitalAdmin.getAllHospitalAdminRole();
         String refreshToken = redisUtil.getData(RT + hospitalAdmin.getUsername());
         if (refreshToken == null) {
-            refreshToken = jwtUtil.createHospitalAdminToken(hospitalAdmin.getUsername(), adminRoles, TokenType.REFRESH_TOKEN);
+            refreshToken = jwtUtil.createToken(hospitalAdmin.getUsername(), adminRoles, TokenType.REFRESH_TOKEN, TokenUserType.HOSPITAL_ADMIN_TOKEN);
             redisUtil.setData(RT + hospitalAdmin.getUsername(), refreshToken, jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
         }
 

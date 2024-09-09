@@ -127,14 +127,14 @@ public class JwtUtil {
     }
 
     /***
-     *
-     * @param email : claim 에 넣기 위한 클라이언트의 이메일
-     * @param roles : claim에 넣기 위한 클라이언트의 권한들
-     * @param tokenType : 액세스 토큰과 리프레시 토큰을 구분짓기 위한 토큰타입
-     * @return : 토큰 타입에 맞는 토큰을 생성하여 리턴
+     * @param subject : jwt 의 subject 값
+     * @param roles : jwt에 넣을 roles (유저의 권한들)
+     * @param tokenType : AccessToken or RefreshToken
+     * @param tokenUserType : 일반 멤버용 토큰인지, 병원 관리자용 토큰인지
+     * @return : 암호화된 JWT
      */
-    public String createMemberToken(String email, List<RoleType> roles, TokenType tokenType) {
-        Claims claims = createClaimsWithEmail(email, roles);
+    public String createToken(String subject, List<RoleType> roles, TokenType tokenType, TokenUserType tokenUserType) {
+        Claims claims = createClaims(subject, roles, tokenUserType);
 
         long expirationTime = getExpirationTime(tokenType);
 
@@ -146,42 +146,21 @@ public class JwtUtil {
                 .compact();
     }
 
-    /***
-     * @param username : claim 에 넣기 위한 클라이언트의 username
-     * @param roles : claim에 넣기 위한 클라이언트의 권한들
-     * @param tokenType : 액세스 토큰과 리프레시 토큰을 구분짓기 위한 토큰타입
-     * @return : 토큰 타입에 맞는 토큰을 생성하여 리턴
-     */
-    public String createHospitalAdminToken(String username, List<RoleType> roles, TokenType tokenType) {
-        Claims claims = createClaimsWithUsername(username, roles);
+    private Claims createClaims(String subject, List<RoleType> roles, TokenUserType tokenUserType) {
+        Claims claims = Jwts.claims().setSubject(subject);
 
-        long expirationTime = getExpirationTime(tokenType);
+        if (tokenUserType.equals(TokenUserType.MEMBER_TOKEN)) {
+            claims.put(EMAIL, subject);
+            claims.put(TOKEN_TYPE, TOKEN_TYPE_H_ADMIN); // or TOKEN_TYPE_MEMBER, adjust based on role type
+        } else {
+            claims.put(USERNAME, subject);
+            claims.put(TOKEN_TYPE, TOKEN_TYPE_MEMBER);
+        }
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(getSigningKey(SECRET_KEY), SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    private Claims createClaimsWithEmail(String email, List<RoleType> roles) {
-        Claims claims = Jwts.claims().setSubject(email);
-        claims.put(EMAIL, email);
-        claims.put(TOKEN_TYPE, TOKEN_TYPE_H_ADMIN);
         if (roles != null && !roles.isEmpty()) {
             claims.put(ROLE, roles.stream().map(Enum::name).toList());
         }
-        return claims;
-    }
 
-    private Claims createClaimsWithUsername(String username, List<RoleType> roles) {
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put(USERNAME, username);
-        claims.put(TOKEN_TYPE, TOKEN_TYPE_MEMBER);
-        if (roles != null && !roles.isEmpty()) {
-            claims.put(ROLE, roles.stream().map(Enum::name).toList());
-        }
         return claims;
     }
 

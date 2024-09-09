@@ -1,5 +1,6 @@
 package com.pettoyou.server.domains.member.service.auth;
 
+import com.pettoyou.server.config.jwt.util.TokenUserType;
 import com.pettoyou.server.domains.auth.AuthTokenGenerator;
 import com.pettoyou.server.domains.auth.OAuthInfoResponse;
 import com.pettoyou.server.domains.auth.OAuthLoginParams;
@@ -56,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
 
         String refreshToken = redisUtil.getData(RT + findMember.getEmail());
         if (refreshToken == null) {
-            refreshToken = jwtUtil.createMemberToken(findMember.getEmail(), memberRoles, TokenType.REFRESH_TOKEN);
+            refreshToken = jwtUtil.createToken(findMember.getEmail(), memberRoles, TokenType.REFRESH_TOKEN, TokenUserType.MEMBER_TOKEN);
             redisUtil.setData(RT + findMember.getEmail(), refreshToken, jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
         }
 

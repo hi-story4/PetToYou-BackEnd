@@ -17,7 +17,7 @@ public interface ReviewService {
 
         void deleteReview(Long reivewId);
 
-        void putReview(Long reivewId,List<MultipartFile> reviewImgs, ReviewReqDto reviewReqDto);
+        void putReview(Long reivewId,Long userId, List<MultipartFile> reviewImgs, ReviewReqDto reviewReqDto);
 
         long patchReviewPinned(Long reivewId, Integer pinned);
 

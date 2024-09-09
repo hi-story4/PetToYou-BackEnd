@@ -53,10 +53,18 @@ public class ReviewServiceImpl implements ReviewService {
     public long patchReviewPinned(Long reivewId, Integer pinned){
         return reviewRepository.updatePinned(reivewId, pinned);
     }
-    public void putReview(Long reivewId, List<MultipartFile> reviewImgs, ReviewReqDto reviewReqDto) {
+    public void putReview(Long reivewId, Long userId, List<MultipartFile> reviewImgs, ReviewReqDto reviewReqDto) {
         //Pet pet  = petRepository.findById(petId).orElseThrow(() -> new CustomException(CustomResponseStatus.PET_NOT_FOUND));
-        //펫 수정은 추후 고려..할까?
+        //펫 수정은 불가능..
         Review review = reviewRepository.findById(reivewId).orElseThrow(() -> new CustomException(CustomResponseStatus.REVIEW_NOT_FOUND));
-        review.modify(reviewReqDto);
+
+        log.info("userID : "+ userId);
+        //사진 수정 제외
+        if(review.getMemberId().equals(userId))
+        {
+
+            review.modify(reviewReqDto);
+        }
+        else throw new CustomException(CustomResponseStatus.ACCESS_DENIED);
     }
 }

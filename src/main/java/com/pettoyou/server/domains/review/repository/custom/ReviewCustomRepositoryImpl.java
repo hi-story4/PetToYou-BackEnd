@@ -76,6 +76,7 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                 .where(review.reviewId.eq(reviewId))
                 .execute();
 
+
         return result;
 
     }

@@ -12,7 +12,6 @@ import com.pettoyou.server.domains.pet.dto.request.PetRegisterAndModifyReqDto;
 import com.pettoyou.server.domains.pet.entity.enums.Gender;
 import com.pettoyou.server.domains.pet.entity.enums.PetType;
 import com.pettoyou.server.domains.photo.entity.PhotoData;
-import com.pettoyou.server.domains.reserve.entity.Reserve;
 import com.pettoyou.server.domains.review.entity.Review;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -76,10 +75,6 @@ public class Pet extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
-    @OneToMany(mappedBy = "pet", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Reserve> reserves = new ArrayList<>();
 
     @OneToMany(mappedBy = "pet", fetch = FetchType.LAZY)
     @Builder.Default

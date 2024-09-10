@@ -1,15 +1,19 @@
 package com.pettoyou.server.domains.member.service.auth;
 
+import com.pettoyou.server.config.jwt.util.TokenInfo;
+import com.pettoyou.server.domains.auth.enums.TokenUserType;
 import com.pettoyou.server.domains.auth.AuthTokenGenerator;
 import com.pettoyou.server.domains.auth.OAuthInfoResponse;
 import com.pettoyou.server.domains.auth.OAuthLoginParams;
 import com.pettoyou.server.domains.auth.RequestOAuthInfoService;
 import com.pettoyou.server.config.jwt.util.JwtUtil;
-import com.pettoyou.server.config.jwt.util.TokenType;
+import com.pettoyou.server.domains.auth.enums.TokenType;
 import com.pettoyou.server.config.redis.util.RedisUtil;
 import com.pettoyou.server.constant.entity.AuthTokens;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
+import com.pettoyou.server.domains.hospital.entity.hospitalAdmin.HospitalAdmin;
+import com.pettoyou.server.domains.hospital.repository.hospitalAdmin.HospitalAdminRepository;
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.member.entity.MemberRole;
 import com.pettoyou.server.domains.member.entity.Role;
@@ -34,6 +38,7 @@ import java.util.Optional;
 public class AuthServiceImpl implements AuthService {
     private final MemberRepository memberRepository;
     private final MemberRoleRepository memberRoleRepository;
+    private final HospitalAdminRepository hospitalAdminRepository;
     private final RoleRepository roleRepository;
     private final RequestOAuthInfoService requestOAuthInfoService;
     private final JwtUtil jwtUtil;
@@ -56,19 +61,18 @@ public class AuthServiceImpl implements AuthService {
 
         String refreshToken = redisUtil.getData(RT + findMember.getEmail());
         if (refreshToken == null) {
-            refreshToken = jwtUtil.createToken(findMember.getEmail(), memberRoles, TokenType.REFRESH_TOKEN);
+            refreshToken = jwtUtil.createToken(findMember.getEmail(), memberRoles, TokenType.REFRESH_TOKEN, TokenUserType.MEMBER_TOKEN);
             redisUtil.setData(RT + findMember.getEmail(), refreshToken, jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
         }
 
-        return authTokenGenerator.generate(findMember.getEmail(), memberRoles, refreshToken);
+        return authTokenGenerator.generateMemberTokenWithRFToken(findMember.getEmail(), memberRoles, refreshToken);
     }
 
     @Override
-    public AuthTokens reissue(String refreshToken) {
-        String resolveToken = jwtUtil.resolveToken(refreshToken);
-        String emailInToken = jwtUtil.getEmailInToken(resolveToken);
+    public AuthTokens reissue(String resolveToken) {
+        TokenInfo tokenInfo = jwtUtil.getInfoInTokenByTokenRoleType(resolveToken); // 이곳
 
-        String refreshTokenInRedis = redisUtil.getData(RT + emailInToken);
+        String refreshTokenInRedis = redisUtil.getData(RT + tokenInfo.infoInClaim()); // 이곳
         if (refreshTokenInRedis == null) {
             throw new CustomException(CustomResponseStatus.REFRESH_TOKEN_EXPIRED);
         }
@@ -76,13 +80,25 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(CustomResponseStatus.REFRESH_TOKEN_NOT_MATCH);
         }
 
-        Member findMember = memberRepository.findByEmail(emailInToken).orElseThrow(
+        if (tokenInfo.tokenUserType().equals(TokenUserType.MEMBER_TOKEN)) {
+            Member findMember = memberRepository.findByEmail(tokenInfo.infoInClaim()).orElseThrow(
+                    () -> new CustomException(CustomResponseStatus.MEMBER_NOT_FOUND)
+            );
+            List<RoleType> memberRoles = findMember.getAllMemberRole();
+
+            AuthTokens generateToken = authTokenGenerator.generateMemberTokenWithoutRFToken(tokenInfo.infoInClaim(), memberRoles);
+            redisUtil.setData(RT + tokenInfo.infoInClaim(), generateToken.refreshToken(), jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
+
+            return generateToken;
+        }
+
+        HospitalAdmin findHospitalAdmin = hospitalAdminRepository.findByUsername(tokenInfo.infoInClaim()).orElseThrow(
                 () -> new CustomException(CustomResponseStatus.MEMBER_NOT_FOUND)
         );
-        List<RoleType> memberRoles = findMember.getAllMemberRole();
+        List<RoleType> hospitalAdminRoles = findHospitalAdmin.getAllHospitalAdminRole();
 
-        AuthTokens generateToken = authTokenGenerator.generate(emailInToken, memberRoles);
-        redisUtil.setData(RT + emailInToken, generateToken.refreshToken(), jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
+        AuthTokens generateToken = authTokenGenerator.generateAdminTokenWithoutRFToken(tokenInfo.infoInClaim(), hospitalAdminRoles);
+        redisUtil.setData(RT + tokenInfo.infoInClaim(), generateToken.refreshToken(), jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
 
         return generateToken;
     }
@@ -90,11 +106,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logout(String accessToken) {
         String resolveAccessToken = jwtUtil.resolveToken(accessToken);
-        String emailInToken = jwtUtil.getEmailInToken(resolveAccessToken);
-        String refreshTokenInRedis = redisUtil.getData(RT + emailInToken);
+        TokenInfo infoInToken = jwtUtil.getInfoInTokenByTokenRoleType(resolveAccessToken);
+        String refreshTokenInRedis = redisUtil.getData(RT + infoInToken.infoInClaim());
         if (refreshTokenInRedis == null) throw new CustomException(CustomResponseStatus.REFRESH_TOKEN_NOT_FOUND);
 
-        redisUtil.deleteDate(RT + emailInToken);
+        redisUtil.deleteDate(RT + infoInToken.infoInClaim());
         redisUtil.setData(resolveAccessToken, LOGOUT, jwtUtil.getExpiration(resolveAccessToken));
     }
 

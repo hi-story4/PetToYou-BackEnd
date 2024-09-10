@@ -6,7 +6,7 @@ import com.pettoyou.server.domains.healthNote.entity.HealthNote;
 import com.pettoyou.server.domains.healthNote.dto.response.HealthNoteDetailInfoDto;
 import com.pettoyou.server.domains.healthNote.dto.response.HealthNoteSimpleInfoDto;
 import com.pettoyou.server.domains.healthNote.repository.HealthNoteRepository;
-import com.pettoyou.server.domains.hospital.repository.HospitalRepository;
+import com.pettoyou.server.domains.hospital.repository.hospital.HospitalRepository;
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.member.repository.MemberRepository;
 import com.pettoyou.server.domains.pet.entity.Pet;
@@ -42,7 +42,7 @@ public class HealthNoteQueryServiceImpl implements HealthNoteQueryService {
 
         member.validateMemberAuthorization(authMemberId);
 
-        String storeName = hospitalRepository.getHospitalNameNameByStoreId(findHealthNote.getStoreId());
+        String storeName = hospitalRepository.getHospitalNameByStoreId(findHealthNote.getStoreId());
         String petName = petRepository.getPetNameByPetId(findHealthNote.getPetId());
 
         return HealthNoteDetailInfoDto.of(findHealthNote, petName, storeName);

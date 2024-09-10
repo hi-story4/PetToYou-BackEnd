@@ -1,6 +1,6 @@
 package com.pettoyou.server.domains.hospital.repository.custom;
 
-import com.pettoyou.server.domains.hospital.entity.HospitalTag;
+import com.pettoyou.server.domains.hospital.entity.hospital.HospitalTag;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryCond;
 import com.pettoyou.server.domains.hospital.dto.request.HosptialSearchQueryInfo;
 import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithAddress;

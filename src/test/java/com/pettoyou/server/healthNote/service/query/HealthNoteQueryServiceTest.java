@@ -7,8 +7,8 @@ import com.pettoyou.server.domains.healthNote.dto.response.HealthNoteSimpleInfoD
 import com.pettoyou.server.domains.healthNote.entity.HealthNote;
 import com.pettoyou.server.domains.healthNote.repository.HealthNoteRepository;
 import com.pettoyou.server.domains.healthNote.service.query.HealthNoteQueryServiceImpl;
-import com.pettoyou.server.domains.hospital.entity.Hospital;
-import com.pettoyou.server.domains.hospital.repository.HospitalRepository;
+import com.pettoyou.server.domains.hospital.entity.hospital.Hospital;
+import com.pettoyou.server.domains.hospital.repository.hospital.HospitalRepository;
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.member.entity.enums.MemberStatus;
 import com.pettoyou.server.domains.member.entity.enums.OAuthProvider;
@@ -115,7 +115,7 @@ class HealthNoteQueryServiceTest {
         Pet pet = createPet(member);
 
         when(healthNoteRepository.findById(any(Long.class))).thenReturn(Optional.of(healthNote));
-        when(hospitalRepository.getHospitalNameNameByStoreId(any(Long.class))).thenReturn(hospital.getStoreName());
+        when(hospitalRepository.getHospitalNameByStoreId(any(Long.class))).thenReturn(hospital.getStoreName());
         when(memberRepository.findById(any(Long.class))).thenReturn(Optional.of(member));
         when(petRepository.getPetNameByPetId(any(Long.class))).thenReturn(pet.getPetName());
 

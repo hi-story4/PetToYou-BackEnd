@@ -1,5 +1,7 @@
 package com.pettoyou.server.config.jwt.util;
 
+import com.pettoyou.server.domains.auth.enums.TokenType;
+import com.pettoyou.server.domains.auth.enums.TokenUserType;
 import com.pettoyou.server.domains.member.entity.enums.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -7,6 +9,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +27,10 @@ import java.util.List;
 @Slf4j
 public class JwtUtil {
     private static final String EMAIL = "email";
+    private static final String USERNAME = "username";
+    private static final String TOKEN_TYPE = "token_type";
+    private static final String TOKEN_TYPE_MEMBER = "MEMBER";
+    private static final String TOKEN_TYPE_H_ADMIN = "HOSPITAL_ADMIN";
     private static final String ROLE = "role";
     private static final String BEARER = "Bearer ";
 
@@ -31,17 +38,20 @@ public class JwtUtil {
     private final long ACCESS_TOKEN_EXPIRATION_TIME;
     private final long REFRESH_TOKEN_EXPIRATION_TIME;
     private final UserDetailsService userDetailsService;
+    private final UserDetailsService hospitalAdminDetailsService;
 
     public JwtUtil(
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.expiration_time.access_token}") long accessTokenExprTime,
             @Value("${jwt.expiration_time.refresh_token}") long refreshTokenExprTime,
-            UserDetailsService userDetailsService
+            @Qualifier("principalDetailsServiceImpl") UserDetailsService userDetailsService,
+            @Qualifier("hospitalAdminDetailsServiceImpl") UserDetailsService hospitalAdminDetailsService
     ) {
         this.SECRET_KEY = secretKey;
         this.ACCESS_TOKEN_EXPIRATION_TIME = accessTokenExprTime;
         this.REFRESH_TOKEN_EXPIRATION_TIME = refreshTokenExprTime;
         this.userDetailsService = userDetailsService;
+        this.hospitalAdminDetailsService = hospitalAdminDetailsService;
     }
 
     /***
@@ -80,7 +90,20 @@ public class JwtUtil {
 
     /***
      * @param token : 요청이 들어온 토큰
-     * @return : 토큰속(claim)에 있는 클라이언트의 email을 리턴
+     * @return : 어떤 종류의 유저인지 리턴 (Member OR HospitalAdmin)
+     */
+    public TokenInfo getInfoInTokenByTokenRoleType(String token) {
+        TokenUserType tokenUserType = getTokenTypeInToken(token);
+        if (getTokenTypeInToken(token).equals(TokenUserType.HOSPITAL_ADMIN_TOKEN)) {
+            return TokenInfo.of(getUsernameInToken(token), tokenUserType);
+        }
+
+        return TokenInfo.of(getEmailInToken(token), tokenUserType);
+    }
+
+    /***
+     * @param token : 요청이 들어온 토큰
+     * @return : 토큰속(claim)에 있는 클라이언트의 email 리턴
      */
     public String getEmailInToken(String token) {
         return extractAllClaims(token).get(EMAIL, String.class);
@@ -88,22 +111,45 @@ public class JwtUtil {
 
     /***
      * @param token : 요청이 들어온 토큰
-     * @return : 토큰을 이용하여 로그인 된 UPA 객체를 가져옴 -> UPA 객체 안에 유저의 권한들이 담겨 있음
+     * @return : 토큰속(claim)에 있는 클라이언트의 username 리턴
      */
-    public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(getEmailInToken(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    public String getUsernameInToken(String token) {
+        return extractAllClaims(token).get(USERNAME, String.class);
+    }
+
+    public TokenUserType getTokenTypeInToken(String token) {
+        String tokenUserType = extractAllClaims(token).get(TOKEN_TYPE, String.class);
+        return TokenUserType.valueOf(tokenUserType);
     }
 
     /***
-     *
-     * @param email : claim 에 넣기 위한 클라이언트의 이메일
-     * @param roles : claim에 넣기 위한 클라이언트의 권한들
-     * @param tokenType : 액세스 토큰과 리프레시 토큰을 구분짓기 위한 토큰타입
-     * @return : 토큰 타입에 맞는 토큰을 생성하여 리턴
+     * @param token : 요청이 들어온 토큰
+     * @return : 토큰을 이용하여 로그인 된 UPA 객체를 가져옴 -> UPA 객체 안에 유저의 권한들이 담겨 있음
      */
-    public String createToken(String email, List<RoleType> roles, TokenType tokenType) {
-        Claims claims = createClaims(email, roles);
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = loadUserDetailsByToken(token);
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    private UserDetails loadUserDetailsByToken(String token) {
+        String authInfo = getTokenTypeInToken(token).equals(TokenUserType.HOSPITAL_ADMIN_TOKEN)
+                ? getUsernameInToken(token)
+                : getEmailInToken(token);
+
+        return getTokenTypeInToken(token).equals(TokenUserType.HOSPITAL_ADMIN_TOKEN)
+                ? hospitalAdminDetailsService.loadUserByUsername(authInfo)
+                : userDetailsService.loadUserByUsername(authInfo);
+    }
+
+    /***
+     * @param subject : jwt 의 subject 값
+     * @param roles : jwt에 넣을 roles (유저의 권한들)
+     * @param tokenType : AccessToken or RefreshToken
+     * @param tokenUserType : 일반 멤버용 토큰인지, 병원 관리자용 토큰인지
+     * @return : 암호화된 JWT
+     */
+    public String createToken(String subject, List<RoleType> roles, TokenType tokenType, TokenUserType tokenUserType) {
+        Claims claims = createClaims(subject, roles, tokenUserType);
 
         long expirationTime = getExpirationTime(tokenType);
 
@@ -115,12 +161,21 @@ public class JwtUtil {
                 .compact();
     }
 
-    private Claims createClaims(String email, List<RoleType> roles) {
-        Claims claims = Jwts.claims().setSubject(email);
-        claims.put(EMAIL, email);
+    private Claims createClaims(String subject, List<RoleType> roles, TokenUserType tokenUserType) {
+        Claims claims = Jwts.claims().setSubject(subject);
+
+        if (tokenUserType.equals(TokenUserType.MEMBER_TOKEN)) {
+            claims.put(EMAIL, subject);
+            claims.put(TOKEN_TYPE, TokenUserType.MEMBER_TOKEN); // or TOKEN_TYPE_MEMBER, adjust based on role type
+        } else {
+            claims.put(USERNAME, subject);
+            claims.put(TOKEN_TYPE, TokenUserType.HOSPITAL_ADMIN_TOKEN);
+        }
+
         if (roles != null && !roles.isEmpty()) {
             claims.put(ROLE, roles.stream().map(Enum::name).toList());
         }
+
         return claims;
     }
 

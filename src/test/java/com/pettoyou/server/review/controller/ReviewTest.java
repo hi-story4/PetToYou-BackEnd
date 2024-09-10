@@ -1,20 +1,18 @@
 package com.pettoyou.server.review.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pettoyou.server.config.security.service.PrincipalDetails;
+import com.pettoyou.server.config.security.service.member.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
-import com.pettoyou.server.domains.hospital.entity.QHospital;
+import com.pettoyou.server.domains.hospital.entity.hospital.Hospital;
 import com.pettoyou.server.domains.pet.entity.enums.Species;
 import com.pettoyou.server.domains.photo.entity.PhotoData;
 import com.pettoyou.server.domains.review.service.ReviewService;
-import com.pettoyou.server.domains.hospital.entity.Hospital;
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.pet.entity.Pet;
 import com.pettoyou.server.domains.review.dto.ReviewRespDto;
 import com.pettoyou.server.domains.review.entity.Review;
 import com.pettoyou.server.domains.store.entity.Address;
 import com.pettoyou.server.domains.store.entity.BusinessHour;
-import com.pettoyou.server.domains.store.entity.RegistrationInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +44,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

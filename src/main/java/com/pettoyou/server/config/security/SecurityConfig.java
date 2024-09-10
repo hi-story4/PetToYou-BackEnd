@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -30,11 +32,6 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().requestMatchers("/kakao/callback", "/favicon.ico");
-//    }
-
     CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             CorsConfiguration config = new CorsConfiguration();
@@ -47,6 +44,11 @@ public class SecurityConfig {
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 // CSRF
@@ -56,10 +58,19 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 권한 규칙 설정 (API 명세에 맞게 수정 필요)
                 .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers(
+                                "/api/v1/auth/kakao/callback",
+                                "/api/v1/auth/naver/callback",
+                                "/api/v1/auth/reissue",
+                                "/api/v1/hospital/admin/sign-up",
+                                "/api/v1/hospital/admin/sign-in",
+                                "/favicon.ico"
+                        )
+                        .permitAll()  // 인증 없이 접근 가능한 URI 추가
                         .requestMatchers("/api/v1/member/**").hasRole("MEMBER")
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/hospital/**").hasRole("HOSPITAL")
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()  // 나머지 요청은 인증 필요
                 )
                 // CORS 해결하기 위한 코드 추가
                 .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))

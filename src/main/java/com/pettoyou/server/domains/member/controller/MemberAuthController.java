@@ -27,6 +27,7 @@ public class MemberAuthController {
             HttpServletResponse response
     ) {
         AuthTokens authTokens = authService.signIn(KakaoLoginParam.from(code));
+        log.info("리프레시 : {}", authTokens.refreshToken());
 
         Cookie refreshTokenCookie = new Cookie("refreshToken", authTokens.refreshToken());
         refreshTokenCookie.setHttpOnly(true);

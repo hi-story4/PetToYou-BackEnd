@@ -5,7 +5,7 @@ import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.healthNote.entity.HealthNote;
 import com.pettoyou.server.domains.healthNote.dto.request.HealthNoteRegistAndModifyReqDto;
 import com.pettoyou.server.domains.healthNote.repository.HealthNoteRepository;
-import com.pettoyou.server.domains.hospital.repository.HospitalRepository;
+import com.pettoyou.server.domains.hospital.repository.hospital.HospitalRepository;
 import com.pettoyou.server.domains.pet.repository.PetRepository;
 import com.pettoyou.server.domains.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,14 +1,16 @@
 package com.pettoyou.server.member.service.auth;
 
+import com.pettoyou.server.config.jwt.util.TokenInfo;
 import com.pettoyou.server.domains.auth.AuthTokenGenerator;
 import com.pettoyou.server.domains.auth.OAuthLoginParams;
 import com.pettoyou.server.domains.auth.RequestOAuthInfoService;
+import com.pettoyou.server.domains.auth.enums.TokenUserType;
 import com.pettoyou.server.domains.auth.kakao.KakaoInfoResponse;
 import com.pettoyou.server.domains.auth.kakao.KakaoLoginParam;
 import com.pettoyou.server.domains.auth.naver.NaverInfoResponse;
 import com.pettoyou.server.domains.auth.naver.NaverLoginParam;
 import com.pettoyou.server.config.jwt.util.JwtUtil;
-import com.pettoyou.server.config.jwt.util.TokenType;
+import com.pettoyou.server.domains.auth.enums.TokenType;
 import com.pettoyou.server.config.redis.util.RedisUtil;
 import com.pettoyou.server.constant.entity.AuthTokens;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
@@ -76,7 +78,7 @@ class AuthServiceTest {
         when(memberRepository.findByProviderAndProviderId(any(OAuthProvider.class), anyString()))
                 .thenReturn(Optional.ofNullable(member));
         when(redisUtil.getData(anyString())).thenReturn("baseRT");
-        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
+        when(authTokenGenerator.generateMemberTokenWithRFToken(anyString(), anyList(), anyString())).thenReturn(authTokens);
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(kakaoInfoResponse);
 
         // when
@@ -101,8 +103,8 @@ class AuthServiceTest {
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(kakaoInfoResponse);
         when(redisUtil.getData(anyString())).thenReturn(null);
         when(jwtUtil.getExpiration(any(TokenType.class))).thenReturn(authTokens.exprTime());
-        when(jwtUtil.createToken(anyString(), anyList(), any(TokenType.class))).thenReturn(authTokens.refreshToken());
-        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
+        when(jwtUtil.createToken(anyString(), anyList(), any(TokenType.class), any(TokenUserType.class))).thenReturn(authTokens.refreshToken());
+        when(authTokenGenerator.generateMemberTokenWithRFToken(anyString(), anyList(), anyString())).thenReturn(authTokens);
 
         // when
         AuthTokens resultToken = authService.signIn(kakaoLoginParam);
@@ -126,7 +128,7 @@ class AuthServiceTest {
         when(memberRepository.findByProviderAndProviderId(any(OAuthProvider.class), anyString()))
                 .thenReturn(Optional.ofNullable(member));
         when(redisUtil.getData(anyString())).thenReturn("baseRT");
-        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
+        when(authTokenGenerator.generateMemberTokenWithRFToken(anyString(), anyList(), anyString())).thenReturn(authTokens);
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(naverInfoResponse);
 
         // when
@@ -149,11 +151,11 @@ class AuthServiceTest {
         when(memberRepository.findByProviderAndProviderId(any(OAuthProvider.class), anyString()))
                 .thenReturn(Optional.ofNullable(member));
         when(redisUtil.getData(anyString())).thenReturn(null);
-        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
+        when(authTokenGenerator.generateMemberTokenWithRFToken(anyString(), anyList(), anyString())).thenReturn(authTokens);
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(naverInfoResponse);
         when(jwtUtil.getExpiration(any(TokenType.class))).thenReturn(authTokens.exprTime());
-        when(jwtUtil.createToken(anyString(), anyList(), any(TokenType.class))).thenReturn(authTokens.refreshToken());
-        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
+        when(jwtUtil.createToken(anyString(), anyList(), any(TokenType.class), any(TokenUserType.class))).thenReturn(authTokens.refreshToken());
+        when(authTokenGenerator.generateMemberTokenWithRFToken(anyString(), anyList(), anyString())).thenReturn(authTokens);
 
         // when
         AuthTokens resultToken = authService.signIn(naverLoginParam);
@@ -182,7 +184,7 @@ class AuthServiceTest {
         when(memberRoleRepository.save(any(MemberRole.class))).thenReturn(null);
 
         when(redisUtil.getData(anyString())).thenReturn("baseRt");
-        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
+        when(authTokenGenerator.generateMemberTokenWithRFToken(anyString(), anyList(), anyString())).thenReturn(authTokens);
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(kakaoInfoResponse);
 
         // when
@@ -210,7 +212,7 @@ class AuthServiceTest {
         when(memberRoleRepository.save(any(MemberRole.class))).thenReturn(null);
 
         when(redisUtil.getData(anyString())).thenReturn("baseRt");
-        when(authTokenGenerator.generate(anyString(), anyList(), anyString())).thenReturn(authTokens);
+        when(authTokenGenerator.generateMemberTokenWithRFToken(anyString(), anyList(), anyString())).thenReturn(authTokens);
         when(requestOAuthInfoService.request(any(OAuthLoginParams.class))).thenReturn(naverInfoResponse);
 
         // when
@@ -227,17 +229,16 @@ class AuthServiceTest {
      */
 
     @Test
-    void 정상_토큰_재발급() {
+    void 일반유저_정상_토큰_재발급() {
         // given
         String validRefreshToken = "validRefreshToken";
-        String emailInToken = "test@gmail.com";
         Member member = createMember();
+        TokenInfo memberTokenInfo = createMemberTokenInfo();
         AuthTokens generateToken = createAuthTokens();
 
-        when(jwtUtil.resolveToken(anyString())).thenReturn(validRefreshToken);
-        when(jwtUtil.getEmailInToken(anyString())).thenReturn(emailInToken);
+        when(jwtUtil.getInfoInTokenByTokenRoleType(anyString())).thenReturn(memberTokenInfo);
         when(redisUtil.getData(anyString())).thenReturn(validRefreshToken);
-        when(authTokenGenerator.generate(anyString(), anyList())).thenReturn(generateToken);
+        when(authTokenGenerator.generateMemberTokenWithoutRFToken(anyString(), anyList())).thenReturn(generateToken);
         when(memberRepository.findByEmail(anyString())).thenReturn(Optional.ofNullable(member));
 
         // when
@@ -250,14 +251,13 @@ class AuthServiceTest {
     }
 
     @Test
-    void 재발급_요청시_토큰이_매칭되지_않으면_예외발생() {
+    void 일반유저_재발급_요청시_토큰이_매칭되지_않으면_예외발생() {
         // given
         String validRefreshToken = "validRefreshToken";
         String wrongRefreshToken = "wrongRefreshToken";
-        String emailInToken = "test@gmail.com";
+        TokenInfo memberTokenInfo = createMemberTokenInfo();
 
-        when(jwtUtil.resolveToken(anyString())).thenReturn(validRefreshToken);
-        when(jwtUtil.getEmailInToken(anyString())).thenReturn(emailInToken);
+        when(jwtUtil.getInfoInTokenByTokenRoleType(anyString())).thenReturn(memberTokenInfo);
         when(redisUtil.getData(anyString())).thenReturn(wrongRefreshToken);
 
         // when
@@ -266,19 +266,24 @@ class AuthServiceTest {
                 .withMessage(CustomResponseStatus.REFRESH_TOKEN_NOT_MATCH.getMessage());
     }
 
+    // Todo : 병원 관리자 정상 토큰 재발급 테스트
+
+    // Todo : 병원 관리자 재발급 요청시 토큰 매칭되지 않는 경우 예외 발생 테스트
+
     /***
      * 로그아웃
      */
 
     @Test
-    void 정상_로그아웃() {
+    void 일반유저_정상_로그아웃() {
         // given
         String validAccessToken = "validAccessToken";
         String emailInToken = "test@gmail.com";
+        TokenInfo memberTokenInfo = createMemberTokenInfo();
         String validRefreshTokenInReds = "validRefreshToken";
 
         when(jwtUtil.resolveToken(anyString())).thenReturn(validAccessToken);
-        when(jwtUtil.getEmailInToken(anyString())).thenReturn(emailInToken);
+        when(jwtUtil.getInfoInTokenByTokenRoleType(anyString())).thenReturn(memberTokenInfo);
         when(redisUtil.getData(anyString())).thenReturn(validRefreshTokenInReds);
 
         // when
@@ -290,13 +295,13 @@ class AuthServiceTest {
     }
 
     @Test
-    void 레디스에_리프레시_토큰이_없는_경우_예외발생() {
+    void 일반유저_로그아웃시_Redis에_리프레시_토큰이_없는_경우_예외발생() {
         // given
         String validAccessToken = "validAccessToken";
-        String emailInToken = "test@gmail.com";
+        TokenInfo memberTokenInfo = createMemberTokenInfo();
 
         when(jwtUtil.resolveToken(anyString())).thenReturn(validAccessToken);
-        when(jwtUtil.getEmailInToken(anyString())).thenReturn(emailInToken);
+        when(jwtUtil.getInfoInTokenByTokenRoleType(anyString())).thenReturn(memberTokenInfo);
         when(redisUtil.getData(anyString())).thenReturn(null);
 
         // then
@@ -305,6 +310,10 @@ class AuthServiceTest {
                 .isThrownBy(() -> authService.logout(validAccessToken))
                 .withMessage(CustomResponseStatus.REFRESH_TOKEN_NOT_FOUND.getMessage());
     }
+
+    // Todo : 병원 관리자 정상 로그아웃
+
+    // Todo : 병원 관리자 로그아웃시 Redis에 리프레시 토큰이 없는 경우 예외 발생
 
     private KakaoLoginParam createKakaoLoginParam() {
         return KakaoLoginParam.from("authorizationCode");
@@ -372,5 +381,19 @@ class AuthServiceTest {
                                 .build()
                 )
                 .build();
+    }
+
+    private TokenInfo createMemberTokenInfo() {
+        return TokenInfo.of(
+                "test@gmail.com",
+                TokenUserType.MEMBER_TOKEN
+        );
+    }
+
+    private TokenInfo createHospitalAdminTokenInfo() {
+        return TokenInfo.of(
+                "test",
+                TokenUserType.HOSPITAL_ADMIN_TOKEN
+        );
     }
 }

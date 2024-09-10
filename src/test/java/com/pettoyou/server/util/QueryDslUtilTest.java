@@ -1,7 +1,7 @@
 package com.pettoyou.server.util;
 
+import com.pettoyou.server.domains.hospital.entity.hospital.Hospital;
 import com.pettoyou.server.domains.review.service.ReviewService;
-import com.pettoyou.server.domains.hospital.entity.Hospital;
 import com.pettoyou.server.domains.review.entity.Review;
 import com.querydsl.core.types.OrderSpecifier;
 import jakarta.persistence.EntityManager;

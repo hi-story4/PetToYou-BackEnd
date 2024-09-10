@@ -1,8 +1,8 @@
 package com.pettoyou.server.domains.hospital.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.pettoyou.server.domains.hospital.entity.Hospital;
-import com.pettoyou.server.domains.hospital.entity.HospitalTag;
+import com.pettoyou.server.domains.hospital.entity.hospital.Hospital;
+import com.pettoyou.server.domains.hospital.entity.hospital.HospitalTag;
 import com.pettoyou.server.domains.hospital.dto.HospitalTagDto;
 import com.pettoyou.server.domains.store.dto.response.AddressDto;
 import com.pettoyou.server.domains.store.entity.Address;

@@ -14,7 +14,6 @@ import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.hospital.entity.hospitalAdmin.HospitalAdmin;
 import com.pettoyou.server.domains.hospital.repository.hospitalAdmin.HospitalAdminRepository;
-import com.pettoyou.server.domains.hospital.repository.hospitalAdmin.HospitalAdminRoleRepository;
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.member.entity.MemberRole;
 import com.pettoyou.server.domains.member.entity.Role;
@@ -107,11 +106,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logout(String accessToken) {
         String resolveAccessToken = jwtUtil.resolveToken(accessToken);
-        String emailInToken = jwtUtil.getEmailInToken(resolveAccessToken);
-        String refreshTokenInRedis = redisUtil.getData(RT + emailInToken);
+        TokenInfo infoInToken = jwtUtil.getInfoInTokenByTokenRoleType(resolveAccessToken);
+        String refreshTokenInRedis = redisUtil.getData(RT + infoInToken.infoInClaim());
         if (refreshTokenInRedis == null) throw new CustomException(CustomResponseStatus.REFRESH_TOKEN_NOT_FOUND);
 
-        redisUtil.deleteDate(RT + emailInToken);
+        redisUtil.deleteDate(RT + infoInToken.infoInClaim());
         redisUtil.setData(resolveAccessToken, LOGOUT, jwtUtil.getExpiration(resolveAccessToken));
     }
 

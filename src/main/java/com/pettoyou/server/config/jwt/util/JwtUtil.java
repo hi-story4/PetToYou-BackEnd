@@ -122,7 +122,6 @@ public class JwtUtil {
         return TokenUserType.valueOf(tokenUserType);
     }
 
-
     /***
      * @param token : 요청이 들어온 토큰
      * @return : 토큰을 이용하여 로그인 된 UPA 객체를 가져옴 -> UPA 객체 안에 유저의 권한들이 담겨 있음
@@ -133,13 +132,13 @@ public class JwtUtil {
     }
 
     private UserDetails loadUserDetailsByToken(String token) {
-        String username = getTokenTypeInToken(token).equals(TOKEN_TYPE_MEMBER)
+        String authInfo = getTokenTypeInToken(token).equals(TokenUserType.HOSPITAL_ADMIN_TOKEN)
                 ? getUsernameInToken(token)
                 : getEmailInToken(token);
 
-        return getTokenTypeInToken(token).equals(TOKEN_TYPE_MEMBER)
-                ? hospitalAdminDetailsService.loadUserByUsername(username)
-                : userDetailsService.loadUserByUsername(username);
+        return getTokenTypeInToken(token).equals(TokenUserType.HOSPITAL_ADMIN_TOKEN)
+                ? hospitalAdminDetailsService.loadUserByUsername(authInfo)
+                : userDetailsService.loadUserByUsername(authInfo);
     }
 
     /***

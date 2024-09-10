@@ -1,10 +1,8 @@
 package com.pettoyou.server;
 
-import com.pettoyou.server.domains.hospital.entity.Hospital;
-import com.pettoyou.server.domains.hospital.repository.HospitalRepository;
-import com.pettoyou.server.domains.store.entity.enums.StoreType;
+import com.pettoyou.server.domains.hospital.entity.hospital.Hospital;
+import com.pettoyou.server.domains.hospital.repository.hospital.HospitalRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

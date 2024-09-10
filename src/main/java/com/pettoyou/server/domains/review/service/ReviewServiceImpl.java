@@ -1,5 +1,6 @@
 package com.pettoyou.server.domains.review.service;
 
+import com.pettoyou.server.config.security.service.PrincipalDetails;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.pet.entity.Pet;
@@ -44,23 +45,33 @@ public class ReviewServiceImpl implements ReviewService {
         return result.getReviewId().toString();
     }
     public Page<ReviewRespDto> getReview(Long storeId, Pageable pageable){
-        Page<Tuple> reviewAndPet = reviewRepository.findReviewsFetchJoinPetsByStoreId(storeId, pageable);
-         List<ReviewRespDto> result = reviewAndPet.stream()
-                 .map(ReviewRespDto::toDto).toList();
-
-         return new PageImpl<>(result, reviewAndPet.getPageable(), reviewAndPet.getTotalElements());
+       return reviewRepository.findReviewsFetchJoinPetsByStoreId(storeId, pageable);
     }
-    public void deleteReview(Long reivewId){
-        reviewRepository.deleteById(reivewId);
+    public void deleteReview(Long reivewId,PrincipalDetails principalDetails){
+        Review review = reviewRepository.findById(reivewId).orElseThrow(() -> new CustomException(CustomResponseStatus.REVIEW_NOT_FOUND));
+
+        if(principalDetails.getAuthorities() != null && (review.getMemberId().equals(principalDetails.getUserId()) ||  principalDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))))
+        {
+            reviewRepository.delete(review);
+        }
+
+
     }
 
     public long patchReviewPinned(Long reivewId, Integer pinned){
         return reviewRepository.updatePinned(reivewId, pinned);
     }
-    public void putReview(Long reivewId, List<MultipartFile> reviewImgs, ReviewReqDto reviewReqDto) {
-        //Pet pet  = petRepository.findById(petId).orElseThrow(() -> new CustomException(CustomResponseStatus.PET_NOT_FOUND));
-        //펫 수정은 추후 고려..할까?
+    public void putReview(Long reivewId, PrincipalDetails principalDetails, List<MultipartFile> reviewImgs, ReviewReqDto reviewReqDto) {
+        //펫 수정은 불가능
         Review review = reviewRepository.findById(reivewId).orElseThrow(() -> new CustomException(CustomResponseStatus.REVIEW_NOT_FOUND));
-        review.modify(reviewReqDto);
+
+        log.info("userID : "+ principalDetails.getUserId());
+        //사진 수정 제외
+
+        if(principalDetails.getAuthorities() != null && (review.getMemberId().equals(principalDetails.getUserId()) ||  principalDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))))
+        {
+            review.modify(reviewReqDto);
+        }
+        else throw new CustomException(CustomResponseStatus.ACCESS_DENIED);
     }
 }

@@ -24,14 +24,15 @@ public class QueryDslUtil {
              Order direction = order.isAscending()? Order.ASC: Order.DESC;
              //springframework order ==> queryDsl의 order로 변환.
              String prop = order.getProperty();
-             PathBuilder pathBuilder = new PathBuilder(entity, prop);
-             //정렬 기준  ex) Review.class의 created_at
+             PathBuilder pathBuilder = new PathBuilder(entity, entity.getSimpleName().toLowerCase());
+             //정렬 기준  ex) Review.class와 별칭.
              orders.add(new OrderSpecifier<>(direction, pathBuilder.get(prop)));
-
              //Unsafe 이슈가 있긴 한데 내부적으로 돌아가서
              System.out.println(direction);
              System.out.println(prop);
+             System.out.println(entity.toString());
              System.out.println(pathBuilder);
+             System.out.println(orders);
          });
          return orders;
     }

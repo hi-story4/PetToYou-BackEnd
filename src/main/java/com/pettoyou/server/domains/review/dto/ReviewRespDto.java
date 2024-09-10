@@ -1,6 +1,7 @@
 package com.pettoyou.server.domains.review.dto;
 
 import com.pettoyou.server.domains.pet.entity.enums.Species;
+import com.pettoyou.server.domains.review.entity.Review;
 import com.querydsl.core.Tuple;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -19,27 +20,24 @@ import static com.pettoyou.server.domains.review.entity.QReview.review;
 
 @Builder
 public record ReviewRespDto(@PastOrPresent LocalDateTime createdAt, @PastOrPresent LocalDateTime modifiedAt, Long reviewId,
-                            @NotNull Integer rating, String treatment, Integer price, String content,
+                            @NotNull Integer rating, String treatment, String treatmentType, Integer price, String content,
                             @NotNull Long memberId, String petName, Species species,
-                            LocalDate birth) implements Serializable {
-    public static ReviewRespDto toDto(Tuple tuple) {
-    ReviewRespDtoBuilder reviewRespDto =  ReviewRespDto.builder()
-            .reviewId(tuple.get(review.reviewId))
-            .createdAt(tuple.get(review.createdAt))
-            .rating(tuple.get(review.rating))
-            .treatment(tuple.get(review.treatment))
-            .price(tuple.get(review.price))
-            .content(tuple.get(review.content))
-            .memberId(tuple.get(review.memberId))
-            .petName(tuple.get(pet.petName))
-            .species(tuple.get(pet.species))
-            .birth(tuple.get(pet.birth));
+                            LocalDate birth, Integer pinned) implements Serializable {
+    public static ReviewRespDto toDto(Review review, String petName, Species species, LocalDate birth) {
+    return ReviewRespDto.builder()
+            .reviewId(review.getReviewId())
+            .createdAt(review.getCreatedAt())
+            .rating(review.getRating())
+            .treatment(review.getTreatment())
+            .treatmentType(review.getTreatmentType())
+            .price(review.getPrice())
+            .content(review.getContent())
+            .memberId(review.getMemberId())
+            .pinned(review.getPinned())
+            .petName(petName)
+            .species(species)
+            .birth(birth)
+            .modifiedAt(review.getModifiedAt())
+            .build();
 
-    if(tuple.get(review.modifiedAt)!=null){
-        reviewRespDto.modifiedAt(tuple.get(review.modifiedAt));
-    }
-
-    return reviewRespDto.build();
-
-}
-}
+}}

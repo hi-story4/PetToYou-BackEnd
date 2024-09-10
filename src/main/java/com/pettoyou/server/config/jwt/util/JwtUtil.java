@@ -90,6 +90,19 @@ public class JwtUtil {
 
     /***
      * @param token : 요청이 들어온 토큰
+     * @return : 어떤 종류의 유저인지 리턴 (Member OR HospitalAdmin)
+     */
+    public TokenInfo getInfoInTokenByTokenRoleType(String token) {
+        TokenUserType tokenUserType = getTokenTypeInToken(token);
+        if (getTokenTypeInToken(token).equals(TokenUserType.HOSPITAL_ADMIN_TOKEN)) {
+            return TokenInfo.of(getUsernameInToken(token), tokenUserType);
+        }
+
+        return TokenInfo.of(getEmailInToken(token), tokenUserType);
+    }
+
+    /***
+     * @param token : 요청이 들어온 토큰
      * @return : 토큰속(claim)에 있는 클라이언트의 email 리턴
      */
     public String getEmailInToken(String token) {
@@ -104,8 +117,9 @@ public class JwtUtil {
         return extractAllClaims(token).get(USERNAME, String.class);
     }
 
-    public String getTokenTypeInToken(String token) {
-        return extractAllClaims(token).get(TOKEN_TYPE, String.class);
+    public TokenUserType getTokenTypeInToken(String token) {
+        String tokenUserType = extractAllClaims(token).get(TOKEN_TYPE, String.class);
+        return TokenUserType.valueOf(tokenUserType);
     }
 
 
@@ -153,10 +167,10 @@ public class JwtUtil {
 
         if (tokenUserType.equals(TokenUserType.MEMBER_TOKEN)) {
             claims.put(EMAIL, subject);
-            claims.put(TOKEN_TYPE, TOKEN_TYPE_H_ADMIN); // or TOKEN_TYPE_MEMBER, adjust based on role type
+            claims.put(TOKEN_TYPE, TokenUserType.MEMBER_TOKEN); // or TOKEN_TYPE_MEMBER, adjust based on role type
         } else {
             claims.put(USERNAME, subject);
-            claims.put(TOKEN_TYPE, TOKEN_TYPE_MEMBER);
+            claims.put(TOKEN_TYPE, TokenUserType.HOSPITAL_ADMIN_TOKEN);
         }
 
         if (roles != null && !roles.isEmpty()) {

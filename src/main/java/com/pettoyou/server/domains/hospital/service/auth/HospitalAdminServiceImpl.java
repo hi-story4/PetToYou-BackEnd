@@ -90,7 +90,7 @@ public class HospitalAdminServiceImpl implements HospitalAdminService {
             redisUtil.setData(RT + hospitalAdmin.getUsername(), refreshToken, jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
         }
 
-        return authTokenGenerator.generateAdminToken(hospitalAdmin.getUsername(), adminRoles, refreshToken);
+        return authTokenGenerator.generateAdminTokenWithRFToken(hospitalAdmin.getUsername(), adminRoles, refreshToken);
     }
 
     private boolean verifyPassword(String rawPassword, String encodedPassword) {

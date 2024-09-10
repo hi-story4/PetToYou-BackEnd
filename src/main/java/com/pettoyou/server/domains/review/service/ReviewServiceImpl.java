@@ -1,6 +1,6 @@
 package com.pettoyou.server.domains.review.service;
 
-import com.pettoyou.server.config.security.service.PrincipalDetails;
+import com.pettoyou.server.config.security.service.member.PrincipalDetails;
 import com.pettoyou.server.constant.enums.CustomResponseStatus;
 import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.pet.entity.Pet;
@@ -11,12 +11,10 @@ import com.pettoyou.server.domains.review.entity.Review;
 import com.pettoyou.server.domains.review.repository.ReviewRepository;
 import com.pettoyou.server.domains.store.entity.Store;
 import com.pettoyou.server.domains.store.repository.StoreRepository;
-import com.querydsl.core.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,7 +45,7 @@ public class ReviewServiceImpl implements ReviewService {
     public Page<ReviewRespDto> getReview(Long storeId, Pageable pageable){
        return reviewRepository.findReviewsFetchJoinPetsByStoreId(storeId, pageable);
     }
-    public void deleteReview(Long reivewId,PrincipalDetails principalDetails){
+    public void deleteReview(Long reivewId, PrincipalDetails principalDetails){
         Review review = reviewRepository.findById(reivewId).orElseThrow(() -> new CustomException(CustomResponseStatus.REVIEW_NOT_FOUND));
 
         if(principalDetails.getAuthorities() != null && (review.getMemberId().equals(principalDetails.getUserId()) ||  principalDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))))

@@ -7,7 +7,9 @@ import com.pettoyou.server.domains.pet.entity.Pet;
 import com.pettoyou.server.domains.pet.repository.PetRepository;
 import com.pettoyou.server.domains.reservation.dto.request.ReservationRegistReqDto;
 import com.pettoyou.server.domains.reservation.entity.Reservation;
+import com.pettoyou.server.domains.reservation.entity.enums.ReservationTimeStatus;
 import com.pettoyou.server.domains.reservation.repository.ReservationRepository;
+import com.pettoyou.server.domains.reservation.repository.TimeTableRepository;
 import com.pettoyou.server.domains.store.entity.Store;
 import com.pettoyou.server.domains.store.repository.StoreRepository;
 import jakarta.transaction.Transactional;
@@ -22,6 +24,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final PetRepository petRepository;
     private final StoreRepository storeRepository;
     private final VetRepository vetRepository;
+    private final TimeTableRepository timeTableRepository;
 
     @Override
     public void reservationRegist(
@@ -36,7 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
         pet.validateOwnerAuthorization(authMemberId);
 
         // Store Valid 체크
-        Store store = storeRepository.findById(registReqDto.storeId()).orElseThrow(
+        storeRepository.findById(registReqDto.storeId()).orElseThrow(
                 () -> new CustomException(CustomResponseStatus.STORE_NOT_FOUND)
         );
 
@@ -46,16 +49,10 @@ public class ReservationServiceImpl implements ReservationService {
         );
 
         // Date & Time Valid 체크
-        Reservation reservation = reservationRepository.findByStoreIdAndReserveDateAndReserveStartAndEndTimeAndReserveStatus(
-                store.getStoreId(),
-                registReqDto.reservationDate(),
-                registReqDto.reservationStartTime(),
-                registReqDto.reservationEndTime()
-        );
-        if (reservation != null) {
-            throw new CustomException(CustomResponseStatus.RESERVATION_ALREADY_EXIST);
-        }
-        // Todo : MongoDB 에서도 존재하는지 파악해야함
+        // 해당 병원인지 확인하기 위해 id double 체크.
+        timeTableRepository.findTimeTableByTimeTableIdAndStoreIdAndAvailableStatus(registReqDto.timeTableId(), registReqDto.storeId(), ReservationTimeStatus.AVAILABLE)
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.RESERVATION_ALREADY_EXIST));
+
 
         // 예약 저장
         reservationRepository.save(Reservation.of(registReqDto, authMemberId));

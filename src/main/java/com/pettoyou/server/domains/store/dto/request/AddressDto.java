@@ -33,7 +33,7 @@ public class AddressDto {
     @NotNull(message = "주소(시군구)를 입력해주세요")
     private String sigungu;
 
-    private String eupmyun;
+    private String buildingNumber;
 
     @NotNull(message = "도로명주소를 입력해주세요")
     private String doro;
@@ -72,7 +72,7 @@ public class AddressDto {
         return Address.builder()
                 .sido(addressDto.sido)
                 .sigungu(addressDto.sigungu)
-                .eupmyun(addressDto.eupmyun)
+                .buildingNumber(addressDto.buildingNumber)
                 .doro(addressDto.doro)
                 .addressDetail(addressDto.addressDetail)
                 .zipCode(addressDto.zipCode)

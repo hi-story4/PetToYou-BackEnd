@@ -12,12 +12,12 @@ import lombok.Builder;
 public record AddressDto(
         String sido,
         String sigungu,
-        String eupmyun) {
+        String buildingNumber) {
 
     public static AddressDto toDto(Address address) {
         return AddressDto.builder()
                 .sido(address.getSido())
-                .eupmyun(address.getEupmyun())
+                .buildingNumber(address.getBuildingNumber())
                 .sigungu(address.getSigungu())
                 .build();
     }

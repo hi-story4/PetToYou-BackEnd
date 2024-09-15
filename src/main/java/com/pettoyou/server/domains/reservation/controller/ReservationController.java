@@ -24,7 +24,10 @@ public class ReservationController {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
         reservationService.reservationRegist(reservationRegistReqDto, principalDetails.getUserId());
+
         return ApiResponse.createSuccessWithOk(null);
     }
+
+
 
 }

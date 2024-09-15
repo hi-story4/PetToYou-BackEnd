@@ -3,11 +3,12 @@ package com.pettoyou.server.domains.reservation.dto.request;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Builder
 public record ReservationRegistReqDto(
-        Long timeTableId,//예약 시간
+        LocalDateTime reservationDateTime,//예약 시간
         Long storeId, // 예약한 스토어
         Long vetId, // 예약한 수의사
 

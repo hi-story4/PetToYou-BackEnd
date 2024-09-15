@@ -11,6 +11,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -29,7 +30,7 @@ public class Reservation extends BaseEntity {
     private String medicalService; // 진료 항목
 
     @NotNull
-    private Long timeTableId;
+    private LocalDateTime reservationDateTime;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -53,9 +54,9 @@ public class Reservation extends BaseEntity {
     private Long vetId;
 
     @Builder
-    public Reservation(String medicalService, Long timeTableId, ReservationStatus reservationStatus, BaseStatus activeStatus, Long storeId, Long petId, Long memberId, Long vetId) {
+    public Reservation(String medicalService, LocalDateTime reservationDateTime, ReservationStatus reservationStatus, BaseStatus activeStatus, Long storeId, Long petId, Long memberId, Long vetId) {
         this.medicalService = medicalService;
-        this.timeTableId = timeTableId;
+        this.reservationDateTime = reservationDateTime;
         this.reservationStatus = reservationStatus;
         this.activeStatus = activeStatus;
         this.storeId = storeId;
@@ -70,7 +71,7 @@ public class Reservation extends BaseEntity {
     ) {
         return Reservation.builder()
                 .medicalService(registReqDto.medicalService())
-                .timeTableId(registReqDto.timeTableId())
+                .reservationDateTime(registReqDto.reservationDateTime())
                 .reservationStatus(ReservationStatus.RESERVE_PENDING)
                 .activeStatus(BaseStatus.ACTIVATE)
                 .storeId(registReqDto.storeId())

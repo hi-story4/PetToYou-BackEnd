@@ -5,9 +5,10 @@ import com.pettoyou.server.domains.reservation.entity.enums.ReservationTimeStatu
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface TimeTableRepository extends JpaRepository<TimeTable, Long> {
 
-    Optional<TimeTable> findTimeTableByTimeTableIdAndStoreIdAndAvailableStatus(Long timeTableId, Long storeId, @NotNull ReservationTimeStatus availableStatus);
+//    Optional<TimeTable> findTimeTableByres(LocalDateTime reservationDateTime, Long storeId);
 }

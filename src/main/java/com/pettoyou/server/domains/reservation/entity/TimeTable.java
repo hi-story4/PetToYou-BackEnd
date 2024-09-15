@@ -28,12 +28,10 @@ public class TimeTable extends BaseEntity {
     private Long timeTableId;
 
     @NotNull
-    private Long storeId;
+    private Long vetId;
 
-    @Enumerated(EnumType.STRING)
     @NotNull
-    @Builder.Default
-    private ReservationTimeStatus availableStatus = ReservationTimeStatus.AVAILABLE;
+    private Long storeId;
 
     @NotNull
     private LocalDate reservationDate; // 진료 날짜 (YY:MM:DD)

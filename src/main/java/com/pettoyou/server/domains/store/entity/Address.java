@@ -24,9 +24,11 @@ public class Address {
     @NotNull
     private String sigungu;
 
-    private String eupmyun;
     @NotNull
     private String doro;
+
+    @NotNull
+    private String buildingNumber;
 
     @JsonSerialize(using = PointSerializer.class)
     @NotNull

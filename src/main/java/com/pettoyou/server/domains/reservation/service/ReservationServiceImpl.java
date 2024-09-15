@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final PetRepository petRepository;
-    private final StoreRepository storeRepository;
     private final VetRepository vetRepository;
     private final TimeTableRepository timeTableRepository;
 
@@ -38,10 +37,6 @@ public class ReservationServiceImpl implements ReservationService {
         );
         pet.validateOwnerAuthorization(authMemberId);
 
-        // Store Valid 체크
-        storeRepository.findById(registReqDto.storeId()).orElseThrow(
-                () -> new CustomException(CustomResponseStatus.STORE_NOT_FOUND)
-        );
 
         // 수의사 Valid 체크
         vetRepository.findByIdAndHospitalId(registReqDto.vetId(), registReqDto.storeId()).orElseThrow(
@@ -49,12 +44,13 @@ public class ReservationServiceImpl implements ReservationService {
         );
 
         // Date & Time Valid 체크
-        // 해당 병원인지 확인하기 위해 id double 체크.
-        timeTableRepository.findTimeTableByTimeTableIdAndStoreIdAndAvailableStatus(registReqDto.timeTableId(), registReqDto.storeId(), ReservationTimeStatus.AVAILABLE)
-                .orElseThrow(() -> new CustomException(CustomResponseStatus.RESERVATION_ALREADY_EXIST));
-
+//        // 해당 병원인지 확인하기 위해 id double 체크.
+//        timeTableRepository.findTimeTableAndStoreId(registReqDto.reservationDateTime(), registReqDto.storeId())
+//                .orElseThrow(() -> new CustomException(CustomResponseStatus.RESERVATION_ALREADY_EXIST));
 
         // 예약 저장
         reservationRepository.save(Reservation.of(registReqDto, authMemberId));
+
+
     }
 }

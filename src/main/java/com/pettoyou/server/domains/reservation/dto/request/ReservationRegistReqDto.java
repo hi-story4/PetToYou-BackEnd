@@ -8,7 +8,9 @@ import java.time.LocalTime;
 
 @Builder
 public record ReservationRegistReqDto(
-        LocalDateTime reservationDateTime,//예약 시간
+        LocalDate reservationDate,//예약 날짜
+        LocalTime reservationTime, //예약 시간
+
         Long storeId, // 예약한 스토어
         Long vetId, // 예약한 수의사
 

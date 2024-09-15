@@ -33,6 +33,7 @@ public class AddressDto {
     @NotNull(message = "주소(시군구)를 입력해주세요")
     private String sigungu;
 
+    @NotNull(message = "건물번호를 입력해주세요")
     private String buildingNumber;
 
     @NotNull(message = "도로명주소를 입력해주세요")

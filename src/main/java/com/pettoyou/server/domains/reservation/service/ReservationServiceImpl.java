@@ -37,20 +37,16 @@ public class ReservationServiceImpl implements ReservationService {
         );
         pet.validateOwnerAuthorization(authMemberId);
 
-
         // 수의사 Valid 체크
         vetRepository.findByIdAndHospitalId(registReqDto.vetId(), registReqDto.storeId()).orElseThrow(
                 () -> new CustomException(CustomResponseStatus.VET_NOT_FOUND)
         );
-
-        // Date & Time Valid 체크
-//        // 해당 병원인지 확인하기 위해 id double 체크.
-//        timeTableRepository.findTimeTableAndStoreId(registReqDto.reservationDateTime(), registReqDto.storeId())
-//                .orElseThrow(() -> new CustomException(CustomResponseStatus.RESERVATION_ALREADY_EXIST));
-
+         //Date & Time Valid 체크
+        if (timeTableRepository.findTimeTableByReservationDateAndReservationStartTime(registReqDto.reservationDate(), registReqDto.reservationTime()).isPresent()) {
+            throw new CustomException(CustomResponseStatus.RESERVATION_ALREADY_EXIST);
+        }
         // 예약 저장
         reservationRepository.save(Reservation.of(registReqDto, authMemberId));
-
 
     }
 }

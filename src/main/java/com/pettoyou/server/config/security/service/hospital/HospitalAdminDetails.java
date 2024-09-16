@@ -37,6 +37,7 @@ public class HospitalAdminDetails implements UserDetails {
         return hospitalAdmin.getHospitalAdminId();
     }
 
+    public Long getHospitalId() {return hospitalAdmin.getHospitalId();}
     @Override
     public boolean isAccountNonExpired() {
         return false;

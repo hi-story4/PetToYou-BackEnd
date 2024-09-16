@@ -44,5 +44,7 @@ public class TimeTable extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private BaseStatus activeStatus;
+
+
 }
 

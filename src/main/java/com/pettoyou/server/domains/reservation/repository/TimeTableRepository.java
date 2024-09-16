@@ -12,5 +12,8 @@ import java.util.Optional;
 
 public interface TimeTableRepository extends JpaRepository<TimeTable, Long> {
 
+
+   boolean existsByReservationDateAndReservationStartTime(LocalDate date, LocalTime time);
+
    Optional<TimeTable> findTimeTableByReservationDateAndReservationStartTime(LocalDate date, LocalTime time);
 }

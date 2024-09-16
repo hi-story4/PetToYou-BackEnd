@@ -11,7 +11,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -30,7 +29,10 @@ public class Reservation extends BaseEntity {
     private String medicalService; // 진료 항목
 
     @NotNull
-    private LocalDateTime reservationDateTime;
+    private LocalDate reservationDate;
+
+    @NotNull
+    private LocalTime reservationTime;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -54,9 +56,10 @@ public class Reservation extends BaseEntity {
     private Long vetId;
 
     @Builder
-    public Reservation(String medicalService, LocalDateTime reservationDateTime, ReservationStatus reservationStatus, BaseStatus activeStatus, Long storeId, Long petId, Long memberId, Long vetId) {
+    public Reservation(String medicalService, LocalDate reservationDate, LocalTime reservationTime,  ReservationStatus reservationStatus, BaseStatus activeStatus, Long storeId, Long petId, Long memberId, Long vetId) {
         this.medicalService = medicalService;
-        this.reservationDateTime = reservationDateTime;
+        this.reservationDate = reservationDate;
+        this.reservationTime = reservationTime;
         this.reservationStatus = reservationStatus;
         this.activeStatus = activeStatus;
         this.storeId = storeId;
@@ -66,18 +69,33 @@ public class Reservation extends BaseEntity {
     }
 
     public static Reservation of(
-            ReservationRegistReqDto registReqDto,
+            ReservationRegistReqDto reservation,
             Long memberId
     ) {
         return Reservation.builder()
-                .medicalService(registReqDto.medicalService())
-                .reservationDateTime(registReqDto.reservationDateTime())
+                .medicalService(reservation.medicalService())
+                .reservationDate(reservation.reservationDate())
+                .reservationTime(reservation.reservationTime())
                 .reservationStatus(ReservationStatus.RESERVE_PENDING)
                 .activeStatus(BaseStatus.ACTIVATE)
-                .storeId(registReqDto.storeId())
-                .petId(registReqDto.petId())
+                .storeId(reservation.storeId())
+                .petId(reservation.petId())
                 .memberId(memberId)
-                .vetId(registReqDto.vetId())
+                .vetId(reservation.vetId())
+                .build();
+    }
+    
+    public static Reservation modifyReserationStatus(Reservation reservation, ReservationStatus status) {
+        return Reservation.builder()
+                .medicalService(reservation.getMedicalService())
+                .reservationDate(reservation.getReservationDate())
+                .reservationTime(reservation.getReservationTime())
+                .reservationStatus(status)
+                .activeStatus(BaseStatus.ACTIVATE)
+                .storeId(reservation.getStoreId())
+                .petId(reservation.getPetId())
+                .memberId(reservation.getMemberId())
+                .vetId(reservation.getVetId())
                 .build();
     }
 }

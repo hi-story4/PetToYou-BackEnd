@@ -11,6 +11,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -29,10 +30,8 @@ public class Reservation extends BaseEntity {
     private String medicalService; // 진료 항목
 
     @NotNull
-    private LocalDate reservationDate;
+    private LocalDateTime reservationDateTime;
 
-    @NotNull
-    private LocalTime reservationTime;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -56,10 +55,9 @@ public class Reservation extends BaseEntity {
     private Long vetId;
 
     @Builder
-    public Reservation(String medicalService, LocalDate reservationDate, LocalTime reservationTime,  ReservationStatus reservationStatus, BaseStatus activeStatus, Long storeId, Long petId, Long memberId, Long vetId) {
+    public Reservation(String medicalService, LocalDateTime reservationDateTime, ReservationStatus reservationStatus, BaseStatus activeStatus, Long storeId, Long petId, Long memberId, Long vetId) {
         this.medicalService = medicalService;
-        this.reservationDate = reservationDate;
-        this.reservationTime = reservationTime;
+        this.reservationDateTime = reservationDateTime;
         this.reservationStatus = reservationStatus;
         this.activeStatus = activeStatus;
         this.storeId = storeId;
@@ -74,8 +72,7 @@ public class Reservation extends BaseEntity {
     ) {
         return Reservation.builder()
                 .medicalService(reservation.medicalService())
-                .reservationDate(reservation.reservationDate())
-                .reservationTime(reservation.reservationTime())
+                .reservationDateTime(reservation.reservationDateTime())
                 .reservationStatus(ReservationStatus.RESERVE_PENDING)
                 .activeStatus(BaseStatus.ACTIVATE)
                 .storeId(reservation.storeId())
@@ -88,8 +85,7 @@ public class Reservation extends BaseEntity {
     public static Reservation modifyReserationStatus(Reservation reservation, ReservationStatus status) {
         return Reservation.builder()
                 .medicalService(reservation.getMedicalService())
-                .reservationDate(reservation.getReservationDate())
-                .reservationTime(reservation.getReservationTime())
+                .reservationDateTime(reservation.getReservationDateTime())
                 .reservationStatus(status)
                 .activeStatus(BaseStatus.ACTIVATE)
                 .storeId(reservation.getStoreId())

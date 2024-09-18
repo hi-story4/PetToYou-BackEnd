@@ -9,9 +9,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -22,8 +19,7 @@ public class TimeTableServiceImpl implements TimeTableService {
 
     public TimeTable postTimeTable(TimeTableReqDto timeTableReqDto) {
 
-        if (timeTableHelperService.timeTableExistsWithDateAndTime(timeTableReqDto.reservationDate(), timeTableReqDto.reservationStartTime())) {
-
+        if (timeTableHelperService.timeTableExistsWithVetIdAndDateTime(timeTableReqDto.vetId(), timeTableReqDto.reservationStartDateTime())) {
             return timeTableRepository.save(TimeTableReqDto.toEntity(timeTableReqDto));
         }
         else throw new CustomException(CustomResponseStatus.RESERVATION_ALREADY_EXIST);

@@ -1,5 +1,6 @@
 package com.pettoyou.server.domains.reservation.dto.request;
 
+import jakarta.validation.constraints.Future;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -8,8 +9,9 @@ import java.time.LocalTime;
 
 @Builder
 public record ReservationRegistReqDto(
-        LocalDate reservationDate,//예약 날짜
-        LocalTime reservationTime, //예약 시간
+
+        @Future
+        LocalDateTime reservationDateTime,//예약 날짜
 
         Long storeId, // 예약한 스토어
         Long vetId, // 예약한 수의사

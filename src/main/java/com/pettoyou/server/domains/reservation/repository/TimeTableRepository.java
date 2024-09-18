@@ -13,7 +13,6 @@ import java.util.Optional;
 public interface TimeTableRepository extends JpaRepository<TimeTable, Long> {
 
 
-   boolean existsByReservationDateAndReservationStartTime(LocalDate date, LocalTime time);
+   boolean existsByVetIdAndReservationStartDateTime(Long vetId, LocalDateTime dateTime);
 
-   Optional<TimeTable> findTimeTableByReservationDateAndReservationStartTime(LocalDate date, LocalTime time);
 }

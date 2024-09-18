@@ -12,6 +12,7 @@ import com.pettoyou.server.domains.reservation.dto.request.ReservationStatusReqD
 import com.pettoyou.server.domains.reservation.entity.Reservation;
 import com.pettoyou.server.domains.reservation.entity.enums.ReservationStatus;
 import com.pettoyou.server.domains.reservation.repository.ReservationRepository;
+import com.pettoyou.server.domains.reservation.service.scheduler.SchedulerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class ReservationServiceImpl implements ReservationService {
     private final PetRepository petRepository;
     private final VetRepository vetRepository;
     private final TimeTableHelperService timeTableHelperService;
+    private final SchedulerService schedulerService;
+
     @Override
     public void reservationRegist(
             ReservationRegistReqDto registReqDto,
@@ -37,17 +40,22 @@ public class ReservationServiceImpl implements ReservationService {
         pet.validateOwnerAuthorization(authMemberId);
 
         // 수의사 Valid 체크
-        vetRepository.findByIdAndHospitalId(registReqDto.vetId(), registReqDto.storeId()).orElseThrow(
-                () -> new CustomException(CustomResponseStatus.VET_NOT_FOUND)
-        );
+//        vetRepository.findByIdAndHospitalId(registReqDto.vetId(), registReqDto.storeId()).orElseThrow(
+//                () -> new CustomException(CustomResponseStatus.VET_NOT_FOUND)
+//        );
          //Date & Time Valid 체크
-        if (timeTableHelperService.timeTableExistsWithDateAndTime(registReqDto.reservationDate(), registReqDto.reservationTime())) {
+        if (timeTableHelperService.timeTableExistsWithVetIdAndDateTime(registReqDto.vetId(), registReqDto.reservationDateTime())) {
             throw new CustomException(CustomResponseStatus.RESERVATION_ALREADY_EXIST);
         }
         // 예약 저장
-        reservationRepository.save(Reservation.of(registReqDto, authMemberId));
+        Reservation savedReservation = reservationRepository.save(Reservation.of(registReqDto, authMemberId));
+
+        schedulerService.scheduleReservationCompletion(savedReservation);
 
     }
+
+
+
     public ReservationStatus updateReservationStatusByAdmin(ReservationStatusReqDto reservationStatusReqDto, HospitalAdminDetails hospitalAdminDetails) {
         Reservation reservation = reservationRepository.findById(reservationStatusReqDto.reservationId())
                 .orElseThrow(() -> new CustomException(CustomResponseStatus.RESERVATION_NOT_FOUND));
@@ -67,6 +75,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation.modifyReserationStatus(reservation, reservationStatusReqDto.reservationStatus());
         return reservation.getReservationStatus();
     }
+
 
     private void isEqualIds(Long idFromReservation, Long idFromUser){
         if(!idFromReservation.equals(idFromUser)){

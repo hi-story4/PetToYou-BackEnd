@@ -5,8 +5,7 @@ import com.pettoyou.server.domains.reservation.repository.TimeTableRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -14,7 +13,7 @@ public class TimeTableHelperService {
 
     private final TimeTableRepository timeTableRepository;
 
-    public boolean timeTableExistsWithDateAndTime(LocalDate date, LocalTime time) {
-        return timeTableRepository.existsByReservationDateAndReservationStartTime(date, time);
+    public boolean timeTableExistsWithVetIdAndDateTime(Long vetId, LocalDateTime dateTime) {
+        return timeTableRepository.existsByVetIdAndReservationStartDateTime(vetId, dateTime);
     }
 }

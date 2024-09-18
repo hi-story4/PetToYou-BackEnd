@@ -7,21 +7,21 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
  * DTO for {@link com.pettoyou.server.domains.reservation.entity.TimeTable}
  */
 
-public record TimeTableReqDto(@NotNull Long storeId, @NotNull Long vetId, @NotNull @FutureOrPresent LocalDate reservationDate,
-                              @NotNull @FutureOrPresent LocalTime reservationStartTime,
-                              @NotNull @Future LocalTime reservationEndTime)  {
+public record TimeTableReqDto(@NotNull Long storeId, @NotNull Long vetId,
+                              @NotNull @FutureOrPresent LocalDateTime reservationStartDateTime,
+                              @NotNull @Future LocalDateTime reservationEndDateTime)  {
 
     public static TimeTable toEntity(TimeTableReqDto timeTableReqDto){
         return TimeTable.builder()
-                .reservationDate(timeTableReqDto.reservationDate)
-                .reservationStartTime(timeTableReqDto.reservationStartTime)
-                .reservationEndTime(timeTableReqDto.reservationEndTime)
+                .reservationStartDateTime(timeTableReqDto.reservationStartDateTime)
+                .reservationEndDateTime(timeTableReqDto.reservationEndDateTime)
                 .storeId(timeTableReqDto.storeId)
                 .vetId(timeTableReqDto.vetId)
                 .activeStatus(BaseStatus.ACTIVATE)

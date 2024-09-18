@@ -95,3 +95,14 @@ public class Reservation extends BaseEntity {
                 .build();
     }
 }
+
+//public void modifyReserationStatus(Reservation reservation, ReservationStatus status) {
+//    this.medicalService = reservation.getMedicalService();
+//    this.reservationDateTime = reservation.getReservationDateTime();
+//    this.reservationStatus = status;
+//    this.activeStatus = reservation.getActiveStatus();
+//    this.storeId = reservation.getStoreId();
+//    this.petId = reservation.getPetId();
+//    this.memberId = reservation.getMemberId();
+//    this.vetId = reservation.getVetId();
+//}

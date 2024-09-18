@@ -55,7 +55,9 @@ public class SchedulerServiceImpl implements SchedulerService {
     // 예약 상태를 'COMPLETED'로 변경하는 메서드
     private void updateReservationStatusToCompleted(Long reservationId) {
         log.info("예약된 코드: Reservation Status to Be Completed");
-        reservationRepository.updateReservationStatusByReservationId(ReservationStatus.VISIT_COMPLETE, reservationId);
+
+        int updatedReservation = reservationRepository.updateReservationStatusByReservationIdAndReservationStatus(ReservationStatus.VISIT_COMPLETE, reservationId, ReservationStatus.RESERVE_COMPLETE);
+        if(updatedReservation != 1) throw new CustomException(CustomResponseStatus.RESERVATION_UPDATE_FAIL);
     }
 }
 

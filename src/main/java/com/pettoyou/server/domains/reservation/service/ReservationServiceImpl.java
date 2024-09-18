@@ -62,7 +62,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         isEqualIds(reservation.getStoreId(), hospitalAdminDetails.getHospitalId());
 
-        Reservation.modifyReserationStatus(reservation, reservationStatusReqDto.reservationStatus());
+        reservation.modifyReserationStatus(reservation, reservationStatusReqDto.reservationStatus());
         return reservation.getReservationStatus();
 
     }
@@ -72,7 +72,7 @@ public class ReservationServiceImpl implements ReservationService {
                         .orElseThrow(() -> new CustomException(CustomResponseStatus.RESERVATION_NOT_FOUND));
         isEqualIds(reservation.getMemberId(), principalDetails.getUserId());
 
-        Reservation.modifyReserationStatus(reservation, reservationStatusReqDto.reservationStatus());
+        reservation.modifyReserationStatus(reservation, reservationStatusReqDto.reservationStatus());
         return reservation.getReservationStatus();
     }
 

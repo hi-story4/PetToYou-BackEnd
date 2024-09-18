@@ -64,6 +64,7 @@ public enum CustomResponseStatus {
     POINT_PARSING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6002", "POINT Parsing FAIL"),
     STORE_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6003","STORE를 저장하는데 실패했습니다."),
     PINNED_FAIL(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6004","상단고정에 실패했습니다. "),
+    RESERVATION_UPDATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6005", "예약 방문완료 처리에 실패했습니다."),
 
 
     /***

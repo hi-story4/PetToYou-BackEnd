@@ -20,7 +20,6 @@ public class ReservationAdminController {
 
     private final ReservationService reservationService;
 
-
     @PutMapping("/reservation")
     public ResponseEntity<ApiResponse<ReservationStatus>> reservationStatus(
             @RequestBody ReservationStatusReqDto reservationStatusReqDto,
@@ -28,7 +27,6 @@ public class ReservationAdminController {
     ) {
         ReservationStatus status = reservationService.updateReservationStatusByAdmin(reservationStatusReqDto, hospitalAdminDetails);
         return ApiResponse.createSuccessWithOk(status);
-
     }
 
 }

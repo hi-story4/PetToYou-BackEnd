@@ -67,9 +67,9 @@ public class SecurityConfig {
                                 "/favicon.ico"
                         )
                         .permitAll()  // 인증 없이 접근 가능한 URI 추가
-                        .requestMatchers("/api/v1/member/**").hasRole("MEMBER")
+                        .requestMatchers("/api/v1/member/**").hasAnyRole("MEMBER", "ADMIN", "HOSPITAL")
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/hospital/**").hasRole("HOSPITAL")
+                        .requestMatchers("/api/v1/hospital/**").hasAnyRole("HOSPITAL", "ADMIN")
                         .anyRequest().authenticated()  // 나머지 요청은 인증 필요
                 )
                 // CORS 해결하기 위한 코드 추가

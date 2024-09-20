@@ -67,7 +67,7 @@ public class SecurityConfig {
                                 "/favicon.ico"
                         )
                         .permitAll()  // 인증 없이 접근 가능한 URI 추가
-                        .requestMatchers("/api/v1/member/**").hasRole("MEMBER")
+                        .requestMatchers("/api/v1/member/**").hasAnyRole("MEMBER", "ADMIN", "HOSPITAL")
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/hospital/admin/**").hasRole("HOSPITAL")
                         .anyRequest().permitAll()  // 나머지 요청은 인증 필요

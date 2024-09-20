@@ -64,6 +64,7 @@ public enum CustomResponseStatus {
     POINT_PARSING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6002", "POINT Parsing FAIL"),
     STORE_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6003","STORE를 저장하는데 실패했습니다."),
     PINNED_FAIL(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6004","상단고정에 실패했습니다. "),
+    RESERVATION_UPDATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6005", "예약 방문완료 처리에 실패했습니다."),
 
 
     /***
@@ -71,7 +72,8 @@ public enum CustomResponseStatus {
      */
     INVALID_ERROR(HttpStatus.BAD_REQUEST.value(), "7000", "유효하지 않은 데이터입니다."),
     INVALID_LATITUDE_ERROR(HttpStatus.BAD_REQUEST.value(), "7001", "위도를 정확하게 입력해주세요 : 34~44"),
-    INVALID_LONGITUDE_ERROR(HttpStatus.BAD_REQUEST.value(), "7002", "경도를 정확하게 입력해주세요 : 124~134");
+    INVALID_LONGITUDE_ERROR(HttpStatus.BAD_REQUEST.value(), "7002", "경도를 정확하게 입력해주세요 : 124~134"),
+    INVALID_RESERVATION_DATETIME_ERROR(HttpStatus.BAD_REQUEST.value(), "7003", "유효하지 않은 예약 시간입니다.");
 
     private final int httpStatusCode;
     private final String code;

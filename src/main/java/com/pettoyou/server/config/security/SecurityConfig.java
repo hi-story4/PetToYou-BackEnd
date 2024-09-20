@@ -69,8 +69,9 @@ public class SecurityConfig {
                         .permitAll()  // 인증 없이 접근 가능한 URI 추가
                         .requestMatchers("/api/v1/member/**").hasAnyRole("MEMBER", "ADMIN", "HOSPITAL")
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        // .requestMatchers("/api/v1/hospital/**").hasAnyRole("HOSPITAL", "ADMIN") 준혁이가 해놨던 설정
                         .requestMatchers("/api/v1/hospital/admin/**").hasRole("HOSPITAL")
-                        .anyRequest().permitAll()  // 나머지 요청은 인증 필요
+                        .anyRequest().permitAll()  // 그 외 요청은 인가처리를 할 필요가 없음
                 )
                 // CORS 해결하기 위한 코드 추가
                 .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))

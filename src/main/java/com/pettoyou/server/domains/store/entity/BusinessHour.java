@@ -36,6 +36,9 @@ public class BusinessHour extends BaseEntity {
     @Nullable
     private Time breakEndTime;
 
+    @Nullable
+    private Time registrationClose;
+
     @NotNull
     private boolean openSt;
     //business_hour은 각각, 월화수목금토일의 상태를 나타내고 openSt=false;는 정기휴무날임을 뜻한다.

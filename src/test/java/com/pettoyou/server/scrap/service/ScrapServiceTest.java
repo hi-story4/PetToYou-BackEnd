@@ -188,6 +188,7 @@ class ScrapServiceTest {
         for (long i = 0; i < 5; i++) {
             list.add(new ScrapQueryRespDto(
                     i,
+                    i,
                     "test" + i + ".com",
                     "hospital" + i,
                     Address.builder()

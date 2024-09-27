@@ -25,6 +25,7 @@ public class ScrapCustomRepositoryImpl implements ScrapCustomRepository{
                         Projections.constructor(
                                 ScrapQueryRespDto.class,
                                 scrap.scrapId,
+                                store.storeId,
                                 store.thumbnail.photoUrl,
                                 store.storeName,
                                 store.address

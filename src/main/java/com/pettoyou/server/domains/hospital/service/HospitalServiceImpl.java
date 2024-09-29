@@ -6,7 +6,7 @@ import com.pettoyou.server.domains.hospital.repository.hospital.TagMapperReposit
 import com.pettoyou.server.domains.hospital.dto.request.HospitalDto;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryAddressInfo;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryCond;
-import com.pettoyou.server.domains.hospital.dto.request.HosptialSearchQueryInfo;
+import com.pettoyou.server.domains.hospital.dto.request.HospitalSearchQueryInfo;
 import com.pettoyou.server.domains.hospital.dto.response.HospitalDetail;
 import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithAddress;
 import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithDistance;
@@ -42,7 +42,7 @@ public class HospitalServiceImpl implements HospitalService {
     private final PhotoService photoService;
 
     @Override
-    public Page<HospitalDtoWithDistance> getHospitalsTest(Pageable pageable, HospitalQueryAddressInfo queryInfo, HospitalQueryCond queryCond) {
+    public Page<HospitalDtoWithDistance> getHospitalsList(Pageable pageable, HospitalQueryAddressInfo queryInfo, HospitalQueryCond queryCond) {
         return hospitalRepository.findHospitalOptimization(
                 pageable,
                 getDayOfWeekNum(),
@@ -53,7 +53,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public Page<HospitalDtoWithAddress> getHospitalSearch(Pageable pageable, HosptialSearchQueryInfo queryInfo) {
+    public Page<HospitalDtoWithAddress> searchHospitalsByName(Pageable pageable, HospitalSearchQueryInfo queryInfo) {
         return hospitalRepository.findHospitalBySearch(pageable, queryInfo, getDayOfWeekNum());
     }
 

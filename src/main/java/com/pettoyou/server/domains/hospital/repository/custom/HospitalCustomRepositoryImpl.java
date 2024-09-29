@@ -6,7 +6,7 @@ import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithAddress;
 import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithDistance;
 import com.pettoyou.server.domains.hospital.entity.hospital.HospitalTag;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryCond;
-import com.pettoyou.server.domains.hospital.dto.request.HosptialSearchQueryInfo;
+import com.pettoyou.server.domains.hospital.dto.request.HospitalSearchQueryInfo;
 import com.pettoyou.server.domains.hospital.dto.response.Times;
 import com.pettoyou.server.domains.store.entity.Address;
 import com.pettoyou.server.domains.store.entity.BusinessHour;
@@ -146,7 +146,7 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
     }
 
     @Override
-    public Page<HospitalDtoWithAddress> findHospitalBySearch(Pageable pageable, HosptialSearchQueryInfo queryInfo, Integer dayOfWeek) {
+    public Page<HospitalDtoWithAddress> findHospitalBySearch(Pageable pageable, HospitalSearchQueryInfo queryInfo, Integer dayOfWeek) {
 
         List<Tuple> hospitals = jpaQueryFactory
                 .select(

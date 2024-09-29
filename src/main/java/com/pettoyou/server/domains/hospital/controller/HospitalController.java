@@ -6,7 +6,7 @@ import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithDistance
 import com.pettoyou.server.domains.hospital.service.HospitalService;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryAddressInfo;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryCond;
-import com.pettoyou.server.domains.hospital.dto.request.HosptialSearchQueryInfo;
+import com.pettoyou.server.domains.hospital.dto.request.HospitalSearchQueryInfo;
 import com.pettoyou.server.domains.hospital.dto.response.HospitalDetail;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,14 +40,14 @@ public class HospitalController {
         log.info("queryInfo : {}", queryInfo);
         log.info("queryCond : {}", queryCond);
 
-        Page<HospitalDtoWithDistance> response = hospitalService.getHospitalsTest(pageable, queryInfo, queryCond);
+        Page<HospitalDtoWithDistance> response = hospitalService.getHospitalsList(pageable, queryInfo, queryCond);
         return ApiResponse.createSuccessWithOk(response);
     }
 
     //병원 검색 조회
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<Page<HospitalDtoWithAddress>>> getSearchHospitalList(Pageable pageable, @Valid @ModelAttribute HosptialSearchQueryInfo queryInfo){
-        Page<HospitalDtoWithAddress> response = hospitalService.getHospitalSearch(pageable, queryInfo);
+    public ResponseEntity<ApiResponse<Page<HospitalDtoWithAddress>>> getSearchHospitalList(Pageable pageable, @Valid @ModelAttribute HospitalSearchQueryInfo queryInfo){
+        Page<HospitalDtoWithAddress> response = hospitalService.searchHospitalsByName(pageable, queryInfo);
         return ApiResponse.createSuccessWithOk(response);
     }
 

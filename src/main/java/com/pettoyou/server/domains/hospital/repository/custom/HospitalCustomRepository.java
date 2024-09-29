@@ -2,7 +2,7 @@ package com.pettoyou.server.domains.hospital.repository.custom;
 
 import com.pettoyou.server.domains.hospital.entity.hospital.HospitalTag;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryCond;
-import com.pettoyou.server.domains.hospital.dto.request.HosptialSearchQueryInfo;
+import com.pettoyou.server.domains.hospital.dto.request.HospitalSearchQueryInfo;
 import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithAddress;
 import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithDistance;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,7 @@ public interface HospitalCustomRepository {
             HospitalQueryCond queryCond
     );
 
-    Page<HospitalDtoWithAddress> findHospitalBySearch(Pageable pageable, HosptialSearchQueryInfo queryInfo, Integer dayOfWeek);
+    Page<HospitalDtoWithAddress> findHospitalBySearch(Pageable pageable, HospitalSearchQueryInfo queryInfo, Integer dayOfWeek);
 
     List<HospitalTag> findTagList(Long hospitalId);
 

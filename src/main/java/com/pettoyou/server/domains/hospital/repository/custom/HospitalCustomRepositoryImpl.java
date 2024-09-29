@@ -257,6 +257,7 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
                         .from(businessHour)
                         .where(
                                 businessHour.dayOfWeek.eq(dayOfWeek)
+                                        .and(businessHour.openSt.isTrue())
                                         .and(businessHour.startTime.isNotNull())
                                         .and(businessHour.endTime.isNotNull())
                                         .and(businessHour.startTime.loe(now))
@@ -266,11 +267,19 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
                 : null;
     }
 
+    //    private BooleanExpression inDistance(String point, Integer radius) {
+//        return radius != null
+//                ? Expressions.booleanTemplate(
+//                "ST_Contains(ST_Buffer(ST_PointFromText({0}, 4326), {1}), {2})",
+//                point, radius, hospital.address.point)
+//                : null;
+//    }
     private BooleanExpression inDistance(String point, Integer radius) {
         return radius != null
                 ? Expressions.booleanTemplate(
-                "ST_Contains(ST_Buffer(ST_PointFromText({0}, 4326), {1}), {2})",
-                point, radius, hospital.address.point)
+                "ST_Distance_Sphere(ST_GeomFromText({0}, 4326), {1}) <= {2}",
+                point, hospital.address.point, radius)
                 : null;
     }
+
 }

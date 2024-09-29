@@ -38,7 +38,6 @@ public class HealthNoteController {
     ) {
         healthNoteCommandService.modifyHealthNote(healthNoteId, modifyReqDto, principalDetails.getUserId());
         return ApiResponse.createSuccessWithOk("건강수첩 수정완료");
-
     }
 
     @DeleteMapping("healthNote/{healthNoteId}")

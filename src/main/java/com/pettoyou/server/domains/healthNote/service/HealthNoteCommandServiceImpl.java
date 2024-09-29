@@ -18,13 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class HealthNoteCommandServiceImpl implements HealthNoteCommandService {
     private final HealthNoteRepository healthNoteRepository;
-    private final StoreRepository storeRepository;
     private final PetRepository petRepository;
     private final HospitalRepository hospitalRepository;
 
     @Override
     @Transactional
-    public void registHealthNote(HealthNoteRegistAndModifyReqDto registReqDto, Long authMemberId) {
+    public void registHealthNote(
+            HealthNoteRegistAndModifyReqDto registReqDto,
+            Long authMemberId
+    ) {
         checkValidHospital(registReqDto.hospitalId());
         checkValidPet(registReqDto.petId(), authMemberId);
 
@@ -33,7 +35,11 @@ public class HealthNoteCommandServiceImpl implements HealthNoteCommandService {
 
     @Override
     @Transactional
-    public void modifyHealthNote(Long healthNoteId, HealthNoteRegistAndModifyReqDto modifyReqDto, Long authMemberId) {
+    public void modifyHealthNote(
+            Long healthNoteId,
+            HealthNoteRegistAndModifyReqDto modifyReqDto,
+            Long authMemberId
+    ) {
         HealthNote findHealthNote = fetchHealthNoteById(healthNoteId);
 
         findHealthNote.validateMemberAuthorization(authMemberId);
@@ -44,26 +50,36 @@ public class HealthNoteCommandServiceImpl implements HealthNoteCommandService {
     }
 
     @Override
-    public void deleteHealthNote(Long healthNoteId, Long authMemberId) {
+    public void deleteHealthNote(
+            Long healthNoteId,
+            Long authMemberId
+    ) {
         HealthNote findHealthNote = fetchHealthNoteById(healthNoteId);
         findHealthNote.validateMemberAuthorization(authMemberId);
 
         healthNoteRepository.delete(findHealthNote);
     }
 
-    private HealthNote fetchHealthNoteById(Long healthNoteId) {
+    private HealthNote fetchHealthNoteById(
+            Long healthNoteId
+    ) {
         return healthNoteRepository.findById(healthNoteId).orElseThrow(() ->
                 new CustomException(CustomResponseStatus.HEALTH_NOTE_NOT_FOUND)
         );
     }
 
-    private void checkValidHospital(Long hospitalId) {
+    private void checkValidHospital(
+            Long hospitalId
+    ) {
         hospitalRepository.findById(hospitalId).orElseThrow(() ->
                 new CustomException(CustomResponseStatus.HOSPITAL_NOT_FOUND)
         );
     }
 
-    private void checkValidPet(Long petId, Long authMemberId) {
+    private void checkValidPet(
+            Long petId,
+            Long authMemberId
+    ) {
         petRepository.findPetUsingPetIdAndMemberId(petId, authMemberId).orElseThrow(() ->
                 new CustomException(CustomResponseStatus.PET_NOT_FOUND)
         );

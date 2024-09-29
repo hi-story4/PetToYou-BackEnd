@@ -16,7 +16,7 @@ public class PetQueryServiceImpl implements PetQueryService {
     private final PetRepository petRepository;
 
     @Override
-    public List<PetDetailInfoRespDto> queryPetList(Long userId) {
+    public List<PetDetailInfoRespDto> fetchClientPets(Long userId) {
         return petRepository.findAllPetsByMemberId(userId);
     }
 

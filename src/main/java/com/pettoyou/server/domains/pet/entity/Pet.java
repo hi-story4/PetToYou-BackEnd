@@ -8,7 +8,6 @@ import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.pet.dto.request.PetModifyReqDto;
 import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.entity.enums.Species;
-import com.pettoyou.server.domains.pet.dto.request.PetRegisterAndModifyReqDto;
 import com.pettoyou.server.domains.pet.entity.enums.Gender;
 import com.pettoyou.server.domains.pet.entity.enums.PetType;
 import com.pettoyou.server.domains.photo.entity.PhotoData;
@@ -33,7 +32,8 @@ import java.util.List;
 @SQLRestriction("pet_status = 'ACTIVATE'")
 @Table(name = "pet")
 public class Pet extends BaseEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pet_id")
     private Long petId;
 
@@ -44,7 +44,6 @@ public class Pet extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private Species species;
-
 
     @NotNull
     private LocalDate birth;
@@ -80,7 +79,7 @@ public class Pet extends BaseEntity {
     @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 
-    public static Pet of(PetRegisterAndModifyReqDto registerDto, PhotoData profilePhotoData, Member member) {
+    public static Pet of(PetRegisterReqDto registerDto, PhotoData profilePhotoData, Member member) {
         return builder()
                 .petName(registerDto.petName())
                 .species(registerDto.species())
@@ -96,35 +95,7 @@ public class Pet extends BaseEntity {
                 .build();
     }
 
-    public static Pet ofV2(PetRegisterReqDto registerDto, PhotoData profilePhotoData, Member member) {
-        return builder()
-                .petName(registerDto.petName())
-                .species(registerDto.species())
-                .birth(registerDto.birth())
-                .petType(registerDto.petType())
-                .gender(registerDto.gender())
-                .adoptionDate(registerDto.adoptionDate() == null ? null : registerDto.adoptionDate())
-                .petMedicalInfo(PetMedicalInfo.from(registerDto.petMedicalInfoDto()))
-                .member(member)
-                .petStatus(BaseStatus.ACTIVATE)
-                .caution(registerDto.caution())
-                .profilePhotoData(profilePhotoData)
-                .build();
-    }
-
-    public void modify(PetRegisterAndModifyReqDto modifyDto, PhotoData newPhoto) {
-        this.petName = modifyDto.petName();
-        this.species = modifyDto.species();
-        this.birth = modifyDto.birth();
-        this.petType = modifyDto.petType();
-        this.adoptionDate = modifyDto.adoptionDate();
-        this.caution = modifyDto.caution();
-        this.petMedicalInfo = PetMedicalInfo.from(modifyDto.petMedicalInfoDto());
-        this.profilePhotoData = newPhoto;
-    }
-
-
-    public void modifyV2(PetModifyReqDto modifyDto, PhotoData newPhoto) {
+    public void modifyPetInfo(PetModifyReqDto modifyDto, PhotoData newPhoto) {
         this.petName = modifyDto.petName();
         this.species = modifyDto.species();
         this.birth = modifyDto.birth();

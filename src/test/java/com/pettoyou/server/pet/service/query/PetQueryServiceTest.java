@@ -50,7 +50,7 @@ class PetQueryServiceTest {
         when(petRepository.findAllPetsByMemberId(any(Long.class))).thenReturn(petList);
 
         // when
-        List<PetDetailInfoRespDto> result = petQueryService.queryPetList(member.getMemberId());
+        List<PetDetailInfoRespDto> result = petQueryService.fetchClientPets(member.getMemberId());
 
         // then
         assertThat(result.size()).isEqualTo(petList.size());
@@ -70,7 +70,7 @@ class PetQueryServiceTest {
         when(petRepository.findAllPetsByMemberId(any(Long.class))).thenReturn(emptyList);
 
         // when
-        List<PetDetailInfoRespDto> result = petQueryService.queryPetList(1L);
+        List<PetDetailInfoRespDto> result = petQueryService.fetchClientPets(1L);
 
         // then
         assertThat(result).isNotNull().isEmpty();

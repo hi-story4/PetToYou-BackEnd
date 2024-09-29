@@ -33,6 +33,7 @@ public abstract class Store extends BaseEntity {
     @Column(name = "store_id")
     private Long storeId;
 
+    @NotNull
     @Column(name = "dtype", insertable = false, updatable = false)
     private String dtype;
 

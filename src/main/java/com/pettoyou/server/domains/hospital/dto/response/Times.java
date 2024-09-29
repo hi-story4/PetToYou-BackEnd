@@ -11,17 +11,17 @@ public record Times(
         Time startTime,
         Time endTime,
         Time breakStartTime,
-        Time breakEndTime
+        Time breakEndTime,
+        Time registrationClose
 ) {
     public static Times of(BusinessHour businessHour){
-
-
         return Times.builder()
                 .openSt(businessHour.isOpenSt())
                 .startTime(businessHour.getStartTime())
                 .endTime(businessHour.getEndTime())
                 .breakStartTime(businessHour.getBreakStartTime())
                 .breakEndTime(businessHour.getBreakEndTime())
+                .registrationClose(businessHour.getRegistrationClose())
                 .build();
     }
 }

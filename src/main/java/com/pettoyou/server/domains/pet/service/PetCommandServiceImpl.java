@@ -9,38 +9,20 @@ import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.dto.response.PetRegisterRespDto;
 import com.pettoyou.server.domains.pet.entity.Pet;
 import com.pettoyou.server.domains.pet.repository.PetRepository;
-import com.pettoyou.server.domains.pet.dto.request.PetRegisterAndModifyReqDto;
 import com.pettoyou.server.domains.photo.entity.PhotoData;
-import com.pettoyou.server.util.S3Util;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class PetCommandServiceImpl implements PetCommandService {
-    private final S3Util s3Util;
     private final PetRepository petRepository;
     private final MemberRepository memberRepository;
 
     @Override
-    public PetRegisterRespDto petRegister(
-            MultipartFile petProfileImg,
-            PetRegisterAndModifyReqDto petRegisterDto,
-            Long authMemberId
-    ) {
-        Member member = findMemberById(authMemberId);
-        PhotoData photoData = processPhotoData(petProfileImg, null);
-
-        Pet registeredPet = petRepository.save(Pet.of(petRegisterDto, photoData, member));
-
-        return PetRegisterRespDto.from(registeredPet.getPetName());
-    }
-
-    @Override
-    public PetRegisterRespDto petRegisterV2(PetRegisterReqDto petRegisterDto, Long authMemberId) {
+    public PetRegisterRespDto registerPet(PetRegisterReqDto petRegisterDto, Long authMemberId) {
         Member member = findMemberById(authMemberId);
 
         // Todo : 성운이가 프로필 업로드를 안할 경우 어떤 식으로 줄지에 맞춰서 코드 수정이 필요함
@@ -53,28 +35,13 @@ public class PetCommandServiceImpl implements PetCommandService {
             );
         }
 
-        Pet registeredPet = petRepository.save(Pet.ofV2(petRegisterDto, petProfilePhotoData, member));
+        Pet registeredPet = petRepository.save(Pet.of(petRegisterDto, petProfilePhotoData, member));
 
         return PetRegisterRespDto.from(registeredPet.getPetName());
     }
 
     @Override
-    public void petModify(
-            Long petId,
-            MultipartFile petProfileImg,
-            PetRegisterAndModifyReqDto petModifyDto,
-            Long authMemberId
-    ) {
-        Pet pet = findPetById(petId);
-        pet.validateOwnerAuthorization(authMemberId);
-
-        PhotoData newPhotoData = processPhotoData(petProfileImg, pet.getProfilePhotoData());
-
-        pet.modify(petModifyDto, newPhotoData);
-    }
-
-    @Override
-    public void petModifyV2(
+    public void modifyPet(
             Long petId,
             PetModifyReqDto petModifyDto,
             Long authMemberId
@@ -91,11 +58,11 @@ public class PetCommandServiceImpl implements PetCommandService {
             );
         }
 
-        pet.modifyV2(petModifyDto, curPhotoData);
+        pet.modifyPetInfo(petModifyDto, curPhotoData);
     }
 
     @Override
-    public void petDelete(
+    public void deletePet(
             Long petId,
             Long authMemberId
     ) {
@@ -103,16 +70,6 @@ public class PetCommandServiceImpl implements PetCommandService {
         pet.validateOwnerAuthorization(authMemberId);
 
         petRepository.delete(pet);
-    }
-
-    private PhotoData processPhotoData(MultipartFile petProfileImg, PhotoData existingPhotoData) {
-        if (petProfileImg != null && !petProfileImg.isEmpty()) {
-            if (existingPhotoData != null) {
-                s3Util.deleteFile(existingPhotoData.getBucket(), existingPhotoData.getObject());
-            }
-            return s3Util.uploadFile(petProfileImg);
-        }
-        return PhotoData.generateDefaultPetProfilePhotoData();
     }
 
     private Member findMemberById(Long memberId) {

@@ -6,11 +6,12 @@ import lombok.Builder;
 @Builder
 public record ScrapQueryRespDto(
         Long scrapId,
+        Long hospitalId,
         String thumbnailUrl,
         String storeName,
         String address
 ) {
-    public ScrapQueryRespDto(Long scrapId, String thumbnailUrl, String storeName, Address address) {
-        this(scrapId, thumbnailUrl, storeName, address.generateDefaultAddressFormat());
+    public ScrapQueryRespDto(Long scrapId, Long storeId, String thumbnailUrl, String storeName, Address address) {
+        this(scrapId, storeId, thumbnailUrl, storeName, address.generateDefaultAddressFormat());
     }
 }

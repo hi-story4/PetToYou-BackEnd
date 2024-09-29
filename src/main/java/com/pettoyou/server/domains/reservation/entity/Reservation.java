@@ -11,6 +11,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -24,22 +25,18 @@ public class Reservation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
-    private Long id;
+    private Long reservationId;
 
     private String medicalService; // 진료 항목
 
     @NotNull
-    private LocalDate reservationDate; // 진료 날짜 (YY:MM:DD)
+    private LocalDateTime reservationDateTime;
 
-    @NotNull
-    private LocalTime reservationStartTime; // 예약 시작 시간 (HH:MM)
-
-    @NotNull
-    private LocalTime reservationEndTime; // 예약 마감 시간 (HH:MM)
 
     @Enumerated(EnumType.STRING)
     @NotNull
     private ReservationStatus reservationStatus;
+
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -58,11 +55,9 @@ public class Reservation extends BaseEntity {
     private Long vetId;
 
     @Builder
-    public Reservation(String medicalService, LocalDate reservationDate, LocalTime reservationStartTime, LocalTime reservationEndTime, ReservationStatus reservationStatus, BaseStatus activeStatus, Long storeId, Long petId, Long memberId, Long vetId) {
+    public Reservation(String medicalService, LocalDateTime reservationDateTime, ReservationStatus reservationStatus, BaseStatus activeStatus, Long storeId, Long petId, Long memberId, Long vetId) {
         this.medicalService = medicalService;
-        this.reservationDate = reservationDate;
-        this.reservationStartTime = reservationStartTime;
-        this.reservationEndTime = reservationEndTime;
+        this.reservationDateTime = reservationDateTime;
         this.reservationStatus = reservationStatus;
         this.activeStatus = activeStatus;
         this.storeId = storeId;
@@ -72,20 +67,42 @@ public class Reservation extends BaseEntity {
     }
 
     public static Reservation of(
-            ReservationRegistReqDto registReqDto,
+            ReservationRegistReqDto reservation,
             Long memberId
     ) {
         return Reservation.builder()
-                .medicalService(registReqDto.medicalService())
-                .reservationDate(registReqDto.reservationDate())
-                .reservationStartTime(registReqDto.reservationStartTime())
-                .reservationEndTime(registReqDto.reservationEndTime())
+                .medicalService(reservation.medicalService())
+                .reservationDateTime(reservation.reservationDateTime())
                 .reservationStatus(ReservationStatus.RESERVE_PENDING)
                 .activeStatus(BaseStatus.ACTIVATE)
-                .storeId(registReqDto.storeId())
-                .petId(registReqDto.petId())
+                .storeId(reservation.storeId())
+                .petId(reservation.petId())
                 .memberId(memberId)
-                .vetId(registReqDto.vetId())
+                .vetId(reservation.vetId())
+                .build();
+    }
+    
+    public static Reservation modifyReserationStatus(Reservation reservation, ReservationStatus status) {
+        return Reservation.builder()
+                .medicalService(reservation.getMedicalService())
+                .reservationDateTime(reservation.getReservationDateTime())
+                .reservationStatus(status)
+                .activeStatus(BaseStatus.ACTIVATE)
+                .storeId(reservation.getStoreId())
+                .petId(reservation.getPetId())
+                .memberId(reservation.getMemberId())
+                .vetId(reservation.getVetId())
                 .build();
     }
 }
+
+//public void modifyReserationStatus(Reservation reservation, ReservationStatus status) {
+//    this.medicalService = reservation.getMedicalService();
+//    this.reservationDateTime = reservation.getReservationDateTime();
+//    this.reservationStatus = status;
+//    this.activeStatus = reservation.getActiveStatus();
+//    this.storeId = reservation.getStoreId();
+//    this.petId = reservation.getPetId();
+//    this.memberId = reservation.getMemberId();
+//    this.vetId = reservation.getVetId();
+//}

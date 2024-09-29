@@ -142,11 +142,11 @@ class HospitalServiceImplTest {
             .build();
 
     @Test
-    void getHospitalsTest() {
+    void getHospitalsList() {
     }
 
     @Test
-    void getHospitalSearch() {
+    void searchHospitalsByName() {
     }
 
     @Test

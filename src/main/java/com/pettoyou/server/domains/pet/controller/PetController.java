@@ -3,7 +3,6 @@ package com.pettoyou.server.domains.pet.controller;
 import com.pettoyou.server.config.security.service.member.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
 import com.pettoyou.server.domains.pet.dto.request.PetModifyReqDto;
-import com.pettoyou.server.domains.pet.dto.request.PetRegisterAndModifyReqDto;
 import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.dto.response.PetDetailInfoRespDto;
 import com.pettoyou.server.domains.pet.dto.response.PetRegisterRespDto;
@@ -15,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,59 +26,38 @@ public class PetController {
     private final PetQueryService petQueryService;
 
     @PostMapping("/pet")
-    public ResponseEntity<ApiResponse<PetRegisterRespDto>> petRegister(
-            @RequestPart(required = false, value = "petProfileImg") MultipartFile petProfileImg,
-            @RequestPart(value = "petRegisterDto") @Valid PetRegisterAndModifyReqDto petRegisterDto,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
-    ) {
-        PetRegisterRespDto response = petCommandService.petRegister(petProfileImg, petRegisterDto, principalDetails.getUserId());
-        return ApiResponse.createSuccessWithOk(response);
-    }
-
-    @PostMapping("/petv2")
-    public ResponseEntity<ApiResponse<PetRegisterRespDto>> petRegisterV2(
+    public ResponseEntity<ApiResponse<PetRegisterRespDto>> registerPet(
             @RequestBody @Valid PetRegisterReqDto petRegisterDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        PetRegisterRespDto response = petCommandService.petRegisterV2(petRegisterDto, principalDetails.getUserId());
+        PetRegisterRespDto response = petCommandService.registerPet(petRegisterDto, principalDetails.getUserId());
         return ApiResponse.createSuccessWithOk(response);
     }
 
     @PutMapping("/pet/{id}")
-    public ResponseEntity<ApiResponse<String>> petModify(
-            @PathVariable Long id,
-            @RequestPart(required = false, value = "petProfileImg") MultipartFile petProfileImg,
-            @RequestPart(value = "petModifyDto") @Valid PetRegisterAndModifyReqDto petRegisterDto,
-            @AuthenticationPrincipal PrincipalDetails principalDetails
-    ) {
-        petCommandService.petModify(id, petProfileImg, petRegisterDto, principalDetails.getUserId());
-        return ApiResponse.createSuccessWithOk("반려동물 정보 수정 완료");
-    }
-
-    @PutMapping("/petv2/{id}")
-    public ResponseEntity<ApiResponse<String>> petModifyV2(
+    public ResponseEntity<ApiResponse<String>> modifyPet(
             @PathVariable Long id,
             @RequestBody @Valid PetModifyReqDto petRegisterDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        petCommandService.petModifyV2(id, petRegisterDto, principalDetails.getUserId());
+        petCommandService.modifyPet(id, petRegisterDto, principalDetails.getUserId());
         return ApiResponse.createSuccessWithOk("반려동물 정보 수정 완료");
     }
 
     @DeleteMapping("/pet/{id}")
-    public ResponseEntity<ApiResponse<String>> petDelete(
+    public ResponseEntity<ApiResponse<String>> deletePet(
             @PathVariable Long id,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        petCommandService.petDelete(id, principalDetails.getUserId());
+        petCommandService.deletePet(id, principalDetails.getUserId());
         return ApiResponse.createSuccessWithOk("반려동물 삭제 완료");
     }
 
     @GetMapping("/pets")
-    public ResponseEntity<ApiResponse<List<PetDetailInfoRespDto>>> petsQuery(
+    public ResponseEntity<ApiResponse<List<PetDetailInfoRespDto>>> fetchClientPets(
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        List<PetDetailInfoRespDto> response = petQueryService.queryPetList(principalDetails.getUserId());
+        List<PetDetailInfoRespDto> response = petQueryService.fetchClientPets(principalDetails.getUserId());
         return ApiResponse.createSuccessWithOk(response);
     }
 

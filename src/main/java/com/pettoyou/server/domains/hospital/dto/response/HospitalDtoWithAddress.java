@@ -24,7 +24,7 @@ public record HospitalDtoWithAddress(
         @NotNull @Size(min = 2) String storeName,
         String thumbnailUrl,
         AddressDto addressDto,
-        //response/dto
+
         Times time,
         HospitalTagDto tags,
         SubscriptionStatus subscriptionStatus
@@ -49,19 +49,4 @@ public record HospitalDtoWithAddress(
                 .subscriptionStatus(subscriptionStatus)
                 .build();
     }
-
-    // *********null 수정 필요 {@link com.pettoyou.server.Times.java} *************//
-
-    //필드주입방식
-//             public static HospitalDtoWithAddress of(Long storeId, String storeName, String photoUrl, Address address, BusinessHour businessHour)
-//             {
-//                 return HospitalDtoWithAddress.builder()
-//                         .storeId(storeId)
-//                         .storeName(storeName)
-//                         .address(AddressDto.toDto(address))
-//                         .time(Times.of(businessHour))
-//                         .thumbnailUrl(photoUrl != null ? photoUrl : "PetToYou-Logo")
-//                         .build();
-////                         .tags()
-//             }
 }

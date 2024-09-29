@@ -6,7 +6,7 @@ import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithAddress;
 import com.pettoyou.server.domains.hospital.dto.response.HospitalDtoWithDistance;
 import com.pettoyou.server.domains.hospital.entity.hospital.HospitalTag;
 import com.pettoyou.server.domains.hospital.dto.request.HospitalQueryCond;
-import com.pettoyou.server.domains.hospital.dto.request.HosptialSearchQueryInfo;
+import com.pettoyou.server.domains.hospital.dto.request.HospitalSearchQueryInfo;
 import com.pettoyou.server.domains.hospital.dto.response.Times;
 import com.pettoyou.server.domains.store.entity.Address;
 import com.pettoyou.server.domains.store.entity.BusinessHour;
@@ -146,7 +146,7 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
     }
 
     @Override
-    public Page<HospitalDtoWithAddress> findHospitalBySearch(Pageable pageable, HosptialSearchQueryInfo queryInfo, Integer dayOfWeek) {
+    public Page<HospitalDtoWithAddress> findHospitalBySearch(Pageable pageable, HospitalSearchQueryInfo queryInfo, Integer dayOfWeek) {
 
         List<Tuple> hospitals = jpaQueryFactory
                 .select(
@@ -257,6 +257,7 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
                         .from(businessHour)
                         .where(
                                 businessHour.dayOfWeek.eq(dayOfWeek)
+                                        .and(businessHour.openSt.isTrue())
                                         .and(businessHour.startTime.isNotNull())
                                         .and(businessHour.endTime.isNotNull())
                                         .and(businessHour.startTime.loe(now))
@@ -266,11 +267,19 @@ public class HospitalCustomRepositoryImpl implements HospitalCustomRepository {
                 : null;
     }
 
+    //    private BooleanExpression inDistance(String point, Integer radius) {
+//        return radius != null
+//                ? Expressions.booleanTemplate(
+//                "ST_Contains(ST_Buffer(ST_PointFromText({0}, 4326), {1}), {2})",
+//                point, radius, hospital.address.point)
+//                : null;
+//    }
     private BooleanExpression inDistance(String point, Integer radius) {
         return radius != null
                 ? Expressions.booleanTemplate(
-                "ST_Contains(ST_Buffer(ST_PointFromText({0}, 4326), {1}), {2})",
-                point, radius, hospital.address.point)
+                "ST_Distance_Sphere(ST_GeomFromText({0}, 4326), {1}) <= {2}",
+                point, hospital.address.point, radius)
                 : null;
     }
+
 }

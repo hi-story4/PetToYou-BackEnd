@@ -117,7 +117,7 @@ public class HospitalServiceImpl implements HospitalService {
         return HospitalTag.toEntity(hospital, tags);
     }
 
-    // Get 요일 숫자 데이터 1~7
+    // Get 요일 숫자 데이터 1~7, 1(월요일) ~ 7(일요일)
     public Integer getDayOfWeekNum() {
         // UTC 타임존으로 현재 날짜를 가져옵니다.
         return ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDate().getDayOfWeek().getValue();

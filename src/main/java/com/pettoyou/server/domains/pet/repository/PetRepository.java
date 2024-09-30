@@ -5,4 +5,5 @@ import com.pettoyou.server.domains.pet.repository.custom.PetCustomRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PetRepository extends JpaRepository<Pet, Long>, PetCustomRepository {
+    boolean existsByPetIdAndMember_MemberId(Long petId, Long memberId);
 }

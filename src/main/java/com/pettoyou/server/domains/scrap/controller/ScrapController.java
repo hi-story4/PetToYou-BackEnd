@@ -4,7 +4,6 @@ import com.pettoyou.server.config.security.service.member.PrincipalDetails;
 import com.pettoyou.server.constant.dto.ApiResponse;
 import com.pettoyou.server.domains.scrap.dto.request.ScrapRegistReqDto;
 import com.pettoyou.server.domains.scrap.dto.response.ScrapQueryRespDto;
-import com.pettoyou.server.domains.scrap.dto.response.ScrapRegistRespDto;
 import com.pettoyou.server.domains.scrap.service.ScrapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

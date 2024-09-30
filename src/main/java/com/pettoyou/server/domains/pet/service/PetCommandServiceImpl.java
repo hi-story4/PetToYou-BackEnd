@@ -9,6 +9,7 @@ import com.pettoyou.server.domains.pet.dto.request.PetRegisterReqDto;
 import com.pettoyou.server.domains.pet.dto.response.PetRegisterRespDto;
 import com.pettoyou.server.domains.pet.entity.Pet;
 import com.pettoyou.server.domains.pet.repository.PetRepository;
+import com.pettoyou.server.domains.pet.validator.PetValidator;
 import com.pettoyou.server.domains.photo.entity.PhotoData;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class PetCommandServiceImpl implements PetCommandService {
     private final PetRepository petRepository;
     private final MemberRepository memberRepository;
+    private final PetValidator petValidator;
 
     @Override
     public PetRegisterRespDto registerPet(PetRegisterReqDto petRegisterDto, Long authMemberId) {
@@ -47,7 +49,7 @@ public class PetCommandServiceImpl implements PetCommandService {
             Long authMemberId
     ) {
         Pet pet = findPetById(petId);
-        pet.validateOwnerAuthorization(authMemberId);
+        petValidator.validatePetOwnership(pet, authMemberId);
 
         PhotoData curPhotoData = pet.getProfilePhotoData();
         if (petModifyDto.petProfilePhotoDto()!= null) {
@@ -67,7 +69,7 @@ public class PetCommandServiceImpl implements PetCommandService {
             Long authMemberId
     ) {
         Pet pet = findPetById(petId);
-        pet.validateOwnerAuthorization(authMemberId);
+        petValidator.validatePetOwnership(pet, authMemberId);
 
         petRepository.delete(pet);
     }

@@ -47,7 +47,7 @@ public class HospitalController {
     //병원 검색 조회
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<Page<HospitalDtoWithAddress>>> getSearchHospitalList(Pageable pageable, @Valid @ModelAttribute HospitalSearchQueryInfo queryInfo){
-        Page<HospitalDtoWithAddress> response = hospitalService.searchHospitalsByName(pageable, queryInfo);
+        Page<HospitalDtoWithAddress> response = hospitalService.searchHospitalsByHospitalName(pageable, queryInfo);
         return ApiResponse.createSuccessWithOk(response);
     }
 

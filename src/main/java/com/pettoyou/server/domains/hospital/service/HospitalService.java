@@ -42,7 +42,7 @@ public interface HospitalService {
      * @return : 검색 조건에 부합하는 병원들을 반환합니다.
      */
     // 병원 검색. 거리 대신 주소로.
-    Page<HospitalDtoWithAddress> searchHospitalsByName(
+    Page<HospitalDtoWithAddress> searchHospitalsByHospitalName(
             Pageable pageable,
             HospitalSearchQueryInfo queryInfo
     );

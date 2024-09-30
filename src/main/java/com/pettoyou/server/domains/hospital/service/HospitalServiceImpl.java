@@ -53,7 +53,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public Page<HospitalDtoWithAddress> searchHospitalsByName(Pageable pageable, HospitalSearchQueryInfo queryInfo) {
+    public Page<HospitalDtoWithAddress> searchHospitalsByHospitalName(Pageable pageable, HospitalSearchQueryInfo queryInfo) {
         return hospitalRepository.findHospitalBySearch(pageable, queryInfo, getDayOfWeekNum());
     }
 

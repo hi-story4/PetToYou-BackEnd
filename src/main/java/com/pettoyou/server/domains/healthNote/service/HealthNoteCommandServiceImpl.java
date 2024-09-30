@@ -30,7 +30,7 @@ public class HealthNoteCommandServiceImpl implements HealthNoteCommandService {
             Long authMemberId
     ) {
         hospitalValidator.checkHospitalExist(registReqDto.hospitalId());
-        petValidator.verifyPetAuthorization(registReqDto.petId(), authMemberId);
+        petValidator.validatePetExistsAndOwner(registReqDto.petId(), authMemberId);
 
         healthNoteRepository.save(HealthNote.of(registReqDto, authMemberId));
     }
@@ -46,7 +46,7 @@ public class HealthNoteCommandServiceImpl implements HealthNoteCommandService {
 
         healthNoteValidator.verifyHealthNoteAuthorization(findHealthNote, authMemberId);
         hospitalValidator.checkHospitalExist(modifyReqDto.hospitalId());
-        petValidator.verifyPetAuthorization(modifyReqDto.petId(), authMemberId);
+        petValidator.validatePetExistsAndOwner(modifyReqDto.petId(), authMemberId);
 
         findHealthNote.modifyHealthNote(modifyReqDto);
     }

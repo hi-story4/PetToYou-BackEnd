@@ -12,13 +12,15 @@ import lombok.Builder;
 public record AddressDto(
         String sido,
         String sigungu,
+        String doro,
         String buildingNumber) {
 
     public static AddressDto toDto(Address address) {
         return AddressDto.builder()
                 .sido(address.getSido())
-                .buildingNumber(address.getBuildingNumber())
                 .sigungu(address.getSigungu())
+                .doro(address.getDoro())
+                .buildingNumber(address.getBuildingNumber())
                 .build();
     }
 }

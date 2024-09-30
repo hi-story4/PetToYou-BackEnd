@@ -21,6 +21,7 @@ public class Address {
 
     @NotNull
     private String sido;
+
     @NotNull
     private String sigungu;
 

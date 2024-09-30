@@ -28,6 +28,7 @@ public enum CustomResponseStatus {
     ALREADY_REGISTERED_WITH_DIFFERENT_PROVIDER(HttpStatus.CONFLICT.value(), "3002", "다른 소셜 로그인 계정으로 가입한 사용자입니다."),
     RESERVATION_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "3003", "예약이 이미 존재합니다."),
     USERNAME_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "3004", "사용할 수 없는 아이디 입니다."),
+    SCRAP_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "3005", "이미 존재하는 스크랩입니다."),
 
     /***
      * 4000: NOT_FOUND

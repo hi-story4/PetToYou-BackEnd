@@ -31,29 +31,29 @@ public class HospitalController {
     // 모든 병원 조회 + 필터링 가능
     @GetMapping()
     public ResponseEntity<ApiResponse<Page<HospitalDtoWithDistance>>> getHospitalList(
-//            @PageableDefault(size = 20, sort = "created_at", direction = Sort.Direction.DESC)
-            @PageableDefault(size = 8)
-            Pageable pageable,
+            @PageableDefault(size = 8) Pageable pageable,
             @ModelAttribute HospitalQueryAddressInfo queryInfo,
             @ModelAttribute HospitalQueryCond queryCond
-    ){
-        log.info("queryInfo : {}", queryInfo);
-        log.info("queryCond : {}", queryCond);
-
+    ) {
         Page<HospitalDtoWithDistance> response = hospitalService.getHospitalsList(pageable, queryInfo, queryCond);
         return ApiResponse.createSuccessWithOk(response);
     }
 
     //병원 검색 조회
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<Page<HospitalDtoWithAddress>>> getSearchHospitalList(Pageable pageable, @Valid @ModelAttribute HospitalSearchQueryInfo queryInfo){
+    public ResponseEntity<ApiResponse<Page<HospitalDtoWithAddress>>> getSearchHospitalList(
+            @PageableDefault(size = 8) Pageable pageable,
+            @Valid @ModelAttribute HospitalSearchQueryInfo queryInfo
+    ) {
         Page<HospitalDtoWithAddress> response = hospitalService.searchHospitalsByHospitalName(pageable, queryInfo);
         return ApiResponse.createSuccessWithOk(response);
     }
 
     // 병원 상세페이지 조회
     @GetMapping("/{hospitalId}")
-    public ResponseEntity<ApiResponse<HospitalDetail>> getHospitalDetail(@PathVariable Long hospitalId){
+    public ResponseEntity<ApiResponse<HospitalDetail>> getHospitalDetail(
+            @PathVariable Long hospitalId
+    ) {
         HospitalDetail response = hospitalService.getHospitalDetail(hospitalId);
         return ApiResponse.createSuccessWithOk(response);
     }

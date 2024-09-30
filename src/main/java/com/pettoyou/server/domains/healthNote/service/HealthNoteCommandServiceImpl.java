@@ -5,9 +5,9 @@ import com.pettoyou.server.constant.exception.CustomException;
 import com.pettoyou.server.domains.healthNote.entity.HealthNote;
 import com.pettoyou.server.domains.healthNote.dto.request.HealthNoteRegistAndModifyReqDto;
 import com.pettoyou.server.domains.healthNote.repository.HealthNoteRepository;
-import com.pettoyou.server.domains.hospital.repository.hospital.HospitalRepository;
-import com.pettoyou.server.domains.pet.repository.PetRepository;
-import com.pettoyou.server.domains.store.repository.StoreRepository;
+import com.pettoyou.server.domains.healthNote.validator.HealthNoteValidator;
+import com.pettoyou.server.domains.hospital.validator.HospitalValidator;
+import com.pettoyou.server.domains.pet.validator.PetValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class HealthNoteCommandServiceImpl implements HealthNoteCommandService {
     private final HealthNoteRepository healthNoteRepository;
-    private final PetRepository petRepository;
-    private final HospitalRepository hospitalRepository;
+
+    private final HealthNoteValidator healthNoteValidator;
+    private final PetValidator petValidator;
+    private final HospitalValidator hospitalValidator;
 
     @Override
     @Transactional
@@ -27,8 +29,8 @@ public class HealthNoteCommandServiceImpl implements HealthNoteCommandService {
             HealthNoteRegistAndModifyReqDto registReqDto,
             Long authMemberId
     ) {
-        checkValidHospital(registReqDto.hospitalId());
-        checkValidPet(registReqDto.petId(), authMemberId);
+        hospitalValidator.checkHospitalExist(registReqDto.hospitalId());
+        petValidator.verifyPetAuthorization(registReqDto.petId(), authMemberId);
 
         healthNoteRepository.save(HealthNote.of(registReqDto, authMemberId));
     }
@@ -42,20 +44,22 @@ public class HealthNoteCommandServiceImpl implements HealthNoteCommandService {
     ) {
         HealthNote findHealthNote = fetchHealthNoteById(healthNoteId);
 
-        findHealthNote.validateMemberAuthorization(authMemberId);
-        checkValidHospital(modifyReqDto.hospitalId());
-        checkValidPet(modifyReqDto.petId(), authMemberId);
+        healthNoteValidator.verifyHealthNoteAuthorization(findHealthNote, authMemberId);
+        hospitalValidator.checkHospitalExist(modifyReqDto.hospitalId());
+        petValidator.verifyPetAuthorization(modifyReqDto.petId(), authMemberId);
 
         findHealthNote.modifyHealthNote(modifyReqDto);
     }
 
     @Override
+    @Transactional
     public void deleteHealthNote(
             Long healthNoteId,
             Long authMemberId
     ) {
         HealthNote findHealthNote = fetchHealthNoteById(healthNoteId);
-        findHealthNote.validateMemberAuthorization(authMemberId);
+
+        healthNoteValidator.verifyHealthNoteAuthorization(findHealthNote, authMemberId);
 
         healthNoteRepository.delete(findHealthNote);
     }
@@ -65,23 +69,6 @@ public class HealthNoteCommandServiceImpl implements HealthNoteCommandService {
     ) {
         return healthNoteRepository.findById(healthNoteId).orElseThrow(() ->
                 new CustomException(CustomResponseStatus.HEALTH_NOTE_NOT_FOUND)
-        );
-    }
-
-    private void checkValidHospital(
-            Long hospitalId
-    ) {
-        hospitalRepository.findById(hospitalId).orElseThrow(() ->
-                new CustomException(CustomResponseStatus.HOSPITAL_NOT_FOUND)
-        );
-    }
-
-    private void checkValidPet(
-            Long petId,
-            Long authMemberId
-    ) {
-        petRepository.findPetUsingPetIdAndMemberId(petId, authMemberId).orElseThrow(() ->
-                new CustomException(CustomResponseStatus.PET_NOT_FOUND)
         );
     }
 }

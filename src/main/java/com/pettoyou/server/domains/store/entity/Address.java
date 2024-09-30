@@ -38,6 +38,6 @@ public class Address {
     //SRID 4326은 위도 경도 순으로  y, x
 
     public String generateDefaultAddressFormat() {
-        return sido + " " + sigungu + " " + doro;
+        return sido + " " + sigungu + " " + doro + " " + buildingNumber;
     }
 }

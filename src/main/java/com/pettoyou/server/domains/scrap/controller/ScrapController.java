@@ -20,20 +20,20 @@ public class ScrapController {
     private final ScrapService scrapService;
 
     @PostMapping("/scrap")
-    public ResponseEntity<ApiResponse<ScrapRegistRespDto>> scrapRegister(
+    public ResponseEntity<ApiResponse<String>> registScrap(
             @RequestBody ScrapRegistReqDto scrapRegistReqDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        ScrapRegistRespDto response = scrapService.scrapRegist(scrapRegistReqDto.storeId(), principalDetails.getUserId());
-        return ApiResponse.createSuccessWithOk(response);
+        scrapService.registScrap(scrapRegistReqDto.storeId(), principalDetails.getUserId());
+        return ApiResponse.createSuccessWithOk("찜 등록 완료");
     }
 
     @DeleteMapping("/scrap/{scrapId}")
-    public ResponseEntity<ApiResponse<String>> scrapRegister(
+    public ResponseEntity<ApiResponse<String>> cancelScrap(
             @PathVariable Long scrapId,
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        scrapService.scrapCancel(scrapId, principalDetails.getUserId());
+        scrapService.cancelScrap(scrapId, principalDetails.getUserId());
         return ApiResponse.createSuccessWithOk("찜 해제 완료");
     }
 

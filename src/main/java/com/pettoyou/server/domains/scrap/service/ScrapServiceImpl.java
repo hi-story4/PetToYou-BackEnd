@@ -7,9 +7,9 @@ import com.pettoyou.server.domains.hospital.repository.hospital.HospitalReposito
 import com.pettoyou.server.domains.member.entity.Member;
 import com.pettoyou.server.domains.member.repository.MemberRepository;
 import com.pettoyou.server.domains.scrap.dto.response.ScrapQueryRespDto;
-import com.pettoyou.server.domains.scrap.dto.response.ScrapRegistRespDto;
 import com.pettoyou.server.domains.scrap.entity.Scrap;
 import com.pettoyou.server.domains.scrap.repository.ScrapRepository;
+import com.pettoyou.server.domains.scrap.validator.ScrapValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,24 +20,27 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ScrapServiceImpl implements ScrapService {
+    private final ScrapValidator scrapValidator;
+
     private final ScrapRepository scrapRepository;
     private final MemberRepository memberRepository;
     private final HospitalRepository hospitalRepository;
 
     @Override
-    public ScrapRegistRespDto scrapRegist(Long storeId, Long authMemberId) {
+    public void registScrap(Long storeId, Long authMemberId) {
+        scrapValidator.validateScrapExists(storeId, authMemberId);
+
         Member findMember = findMemberById(authMemberId);
         Hospital findHospital = findHospitalById(storeId);
 
-        Scrap saveScrap = scrapRepository.save(Scrap.of(findMember, findHospital));
-
-        return new ScrapRegistRespDto(saveScrap.getStore().getStoreName());
+        scrapRepository.save(Scrap.of(findMember, findHospital));
     }
 
     @Override
-    public void scrapCancel(Long scrapId, Long authMemberId) {
+    public void cancelScrap(Long scrapId, Long authMemberId) {
         Scrap findScrap = findScrapById(scrapId);
-        findScrap.validateOwnerAuthorization(authMemberId);
+
+        scrapValidator.validateScrapOwnership(findScrap, authMemberId);
 
         scrapRepository.delete(findScrap);
     }
